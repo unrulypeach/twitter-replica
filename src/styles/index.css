@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .btn-primary-big {
+    @apply  bg-blue text-white text-[15px] font-bold leading-5
+            flex flex-row justify-center items-center
+            rounded-full w-[228px] h-[49px] px-[30px]
+  }
+
+  .btn-primary-med {
+    @apply  bg-blue text-white text-[15px] font-bold leading-5
+            flex flex-row justify-center items-center
+            rounded-full w-[228px] h-[39px] py-[15px] px-[03px]
+  }
+
+  .btn-secondary-med {
+    @apply border-blue border-[1px] rounded-full text-blue font-bold leading-5
+            flex flex-row justify-center items-center
+            w-[228px] h-[39px] py-[15px] px-[93px]
+  }
+
+  .btn-secondary-sm {
+    @apply border-blue border-[1px] rounded-full text-blue font-bold leading-5
+            flex flex-row justify-center items-center
+            w-[228px] h-[30px] py-[15px] px-[93px]
+  }
+
+  .btn-tweet {
+    @apply bg-blue text-white text-[14px] leading-[19px] font-bold
+            flex flex-row justify-center items-center grow
+            rounded-full border-[1px] border-blue
+  }
+
+  .btn-follow {
+    @apply bg-black text-white text-[13px] leading-[15px] font-bold
+            flex flex-row justify-center items-center grow
+            rounded-full border-[1px] border-black
+  }
+
+  .blue-icon {
+    @apply  fill-blue h-[1.25em]
+  }
+
+  .blue-icon-positioning {
+    @apply min-w-[34px] min-h-[34px] flex flex-row justify-center text-center items-center
+  }
+  
+  .btn-signup {
+    @apply w-[300px] max-w-[400px] min-w-min h-[40px] rounded-[20px] px-[12px] border-solid border-greyBorder border-[0.8px]
+  }
+
+  .input-signup {
+    @apply outline-none text-[15px] leading-[23px] w-full
+  }
+
+  .input-name-signup {
+    @apply absolute px-[8px] pt-[15px] text-greyTxt text-[16px] leading-[23px] select-none
+          group-focus-within:pt-[8px] group-focus-within:text-[13px] group-focus-within:leading-[15px] 
+          group-focus-within:text-blue
+  }
+
+  .input-name-text-signup {
+    @apply absolute px-[8px] pt-[8px] text-greyTxt text-[13px] leading-[15px] select-none
+  }
+
+  .input-counter {
+    @apply ml-auto px-[8px] pt-[8px] text-[13px] leading-[15px] text-greyTxt
+  }
+
+  .input-name-signup {
+    transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s,
+                transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s,
+                color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s,
+                font-size 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s,
+                padding-top 150ms cubic-bezier(0.4, 0, 0.2, 1) 0s
+  }
+
+  .label-signup {
+    @apply px-[8px] pt-[11px] pb-[8px] mt-[15px]
+          
+  }
+
+  .select-signup-container {
+    @apply pr-[8px] border-[1px] border-greyBorder rounded-[4px] 
+    focus-within:outline focus-within:outline-blue focus-within:outline-[2px] focus-within:border-clear
+  }
+
+  .select-label-signup {
+    @apply text-greyTxt text-[12px] leading-[15px] pt-[8px] px-[8px] absolute group-focus-within:text-blue
+  }
+
+  .select-signup {
+    @apply bg-white w-full pb-[8px] pt-[11px] px-[8px] mt-[15px] text-[16px] leading-[19px]
+            rounded-[4px]
+  }
+
+}
