@@ -27,7 +27,13 @@ export default {
       blue: "#1DA1F2",
       blueClear: "rgba(29, 155, 240, 0.1)",
       avatarHover: "rgba(231, 233, 234, 0.1)",
-      searchbar: "#EFF3F4"
+      searchbar: "#EFF3F4",
+      likesHover: "rgba(249, 24, 128, 0.1)",
+      likesLineHover: "rgb(249, 24, 128)",
+      retweetHover: "rgba(0, 186, 124, 0.1)",
+      retweetLineHover: "rgb(0, 186, 124)",
+      blueHover: "rgba(29, 155, 240, 0.1)",
+      blueLineHover: "rgb(29, 155, 240)",
     },
     extend: {
       boxShadow: {

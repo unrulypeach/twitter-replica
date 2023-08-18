@@ -1,18 +1,14 @@
-import SignedInHome from "./signedIn";
-import SignedOutHome from "./signedOut";
-import SignInFooter from "../components/signInFooter";
-import type InewUser from "../types/InewUser";
+import SignedInHome from './signedIn';
+import SignedOutHome from './signedOut';
+import SignInFooter from '../components/signInFooter';
+import type InewUser from '../types/InewUser';
 
-import {
-  SIGNUP_PAGE_CONTEXT,
-  NEW_USER_CONTEXT,
-  LOGIN_PAGE_CONTEXT,
-} from "../contexts/userContext";
+import { SIGNUP_PAGE_CONTEXT, NEW_USER_CONTEXT, LOGIN_PAGE_CONTEXT } from '../contexts/userContext';
 
-import { useState } from "react";
-import { Outlet } from "react-router-dom";
-import { newUserDefault } from "../defaults/newUserDefault";
-import { useAuthContext } from "../contexts/authContext";
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import { newUserDefault } from '../defaults/newUserDefault';
+import { useAuthContext } from '../contexts/authContext';
 
 export default function HomePg(): JSX.Element {
   const [signupPage, setSignupPage] = useState(0);

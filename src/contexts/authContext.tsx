@@ -1,6 +1,6 @@
-import { createContext, useContext, useEffect, useState } from "react";
-import uniqid from "uniqid";
-import type ChildrenProps from "../types/childrenProps";
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import uniqid from 'uniqid';
+import type ChildrenProps from '../types/childrenProps';
 import {
   type UserCredential,
   createUserWithEmailAndPassword,
@@ -8,33 +8,18 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   signOut,
-} from "firebase/auth";
-import { auth, storage, db } from "../configs/firebase-config";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import {
-  doc,
-  getDoc,
-  setDoc,
-  updateDoc,
-  type DocumentData,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
-import type ProfileProps from "../types/profileProps";
+} from 'firebase/auth';
+import { auth, storage, db } from '../configs/firebase-config';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { doc, setDoc, updateDoc, type DocumentData, collection, query, where, getDocs } from 'firebase/firestore';
+import type ProfileProps from '../types/profileProps';
 interface IAuthContext {
   currentUser?: any;
   userProfile?: ProfileProps;
-  setUserProfile?: React.Dispatch<
-    React.SetStateAction<ProfileProps | undefined>
-  >;
+  setUserProfile?: React.Dispatch<React.SetStateAction<ProfileProps | undefined>>;
 
   createUser?: (email: string, password: string) => Promise<UserCredential>;
-  createUserInDB?: (
-    user: UserCredential,
-    birthdate: Date | undefined
-  ) => Promise<void>;
+  createUserInDB?: (user: UserCredential, birthdate: Date | undefined) => Promise<void>;
 
   login?: (email: string, password: string) => Promise<UserCredential>;
   logout?: () => Promise<void>;
@@ -55,21 +40,15 @@ export function useAuthContext(): IAuthContext {
   return useContext(AuthContext);
 }
 
-export function AuthProvider({ children }: ChildrenProps): JSX.Element {
+export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState({});
   const [userProfile, setUserProfile] = useState<ProfileProps>();
 
-  async function createUser(
-    email: string,
-    password: string
-  ): Promise<UserCredential> {
+  async function createUser(email: string, password: string): Promise<UserCredential> {
     return await createUserWithEmailAndPassword(auth, email, password);
   }
 
-  async function createUserInDB(
-    user: UserCredential,
-    birthdate: Date | undefined
-  ): Promise<void> {
+  async function createUserInDB(user: UserCredential, birthdate: Date | undefined): Promise<void> {
     try {
       const username = user.user.displayName ?? undefined;
       const docData = {
@@ -81,10 +60,10 @@ export function AuthProvider({ children }: ChildrenProps): JSX.Element {
         joinedDate: new Date(),
       };
       setUserProfile(docData);
-      const newUserRef = doc(db, "user-profiles", docData.userHandle);
+      const newUserRef = doc(db, 'user-profiles', docData.userHandle);
       await setDoc(newUserRef, docData);
     } catch (error) {
-      console.error("error creating user in db", error);
+      console.error('error creating user in db', error);
     }
   }
 
@@ -94,12 +73,9 @@ export function AuthProvider({ children }: ChildrenProps): JSX.Element {
         const docData = {
           userHandle: newHandle,
         };
-        await updateDoc(
-          doc(db, "user-profiles", auth.currentUser.uid),
-          docData
-        );
+        await updateDoc(doc(db, 'user-profiles', auth.currentUser.uid), docData);
       } catch (error) {
-        console.error("error updating username", error);
+        console.error('error updating username', error);
       }
   }
 
@@ -108,17 +84,17 @@ export function AuthProvider({ children }: ChildrenProps): JSX.Element {
     const { currentUser } = auth;
     if (currentUser)
       try {
-        const userUid = currentUser.uid ?? "";
+        const userUid = currentUser.uid ?? '';
         const filePath = `${userUid}/${file.name}`;
         const newImageRef = ref(storage, filePath);
         await uploadBytesResumable(newImageRef, file);
 
         const publicImageUrl = await getDownloadURL(newImageRef);
-        await updateDoc(doc(db, "user-profiles", userUid), {
+        await updateDoc(doc(db, 'user-profiles', userUid), {
           photoURL: publicImageUrl,
         });
       } catch (error) {
-        console.error("error uploading to cloud storage", error);
+        console.error('error uploading to cloud storage', error);
       }
   }
 
@@ -147,9 +123,9 @@ export function AuthProvider({ children }: ChildrenProps): JSX.Element {
   async function getUserProfileFromDB(): Promise<DocumentData | undefined> {
     const { currentUser } = auth;
     if (currentUser) {
-      const usersRef = collection(db, "user-profiles");
+      const usersRef = collection(db, 'user-profiles');
       // const docSnap = await getDoc(usersRef);
-      const userQuery = query(usersRef, where("uid", "==", currentUser?.uid));
+      const userQuery = query(usersRef, where('uid', '==', currentUser?.uid));
       const userQuerySnapshot = await getDocs(userQuery);
 
       let userData;
@@ -188,7 +164,7 @@ export function AuthProvider({ children }: ChildrenProps): JSX.Element {
             const x = await getUserProfileFromDB();
             setUserProfile(x);
           } catch (error) {
-            console.error("could not set userProfile", error);
+            console.error('could not set userProfile', error);
           }
         })();
       } else {
@@ -198,20 +174,22 @@ export function AuthProvider({ children }: ChildrenProps): JSX.Element {
     return unsub;
   }, []);
 
-  const values = {
-    currentUser,
-    userProfile,
-    setUserProfile,
-    createUser,
-    createUserInDB,
-    login,
-    getUserProfileFromDB,
-    logout,
-    updateUserHandle,
-    updateUserName,
-    uploadUserPhoto,
-    updateUserPhoto,
-  };
+  const values = useMemo(() => {
+    return {
+      currentUser,
+      userProfile,
+      setUserProfile,
+      createUser,
+      createUserInDB,
+      login,
+      getUserProfileFromDB,
+      logout,
+      updateUserHandle,
+      updateUserName,
+      uploadUserPhoto,
+      updateUserPhoto,
+    };
+  }, [currentUser, userProfile]);
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
-}
+};

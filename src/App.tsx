@@ -9,7 +9,6 @@ import ExplorePage from './routes/pages/explorePg';
 import MessagesPage from './routes/pages/messagesPg';
 import NotificationsPage from './routes/pages/notificationsPg';
 import ProfilePage from './routes/pages/profilePg';
-import { getUserProfile } from './services/firebase/firestore';
 
 import { AuthProvider } from './contexts/authContext';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
@@ -33,9 +32,10 @@ const router = createBrowserRouter([
       {
         path: ':userHandle',
         element: <ProfilePage />,
-        loader: async ({ params }) => {
-          return (await getUserProfile(params.userHandle)) ?? null;
-        },
+        /* loader: async ({ params }) => {
+          if (params.userHandle) return await getUserProfile(params.userHandle);
+          return null;
+        }, */
         children: [{ path: 'settings', element: <EditProfile /> }],
       },
     ],

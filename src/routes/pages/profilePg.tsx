@@ -1,19 +1,36 @@
-import Header from "../../features/header";
-import SignedInRSideMenu from "../../components/sidemenu/right/signedInRSideMenu";
-import Tabbar from "../../features/tabbar";
-import Profile from "../../components/user/profile";
-import { Outlet, useLoaderData } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getPosts } from "../../services/firebase/firestore";
-import Tweet from "../../features/tweet";
-import { pathWoBackslash } from "../../scripts/utils";
+import Header from '../../features/header';
+import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
+import Tabbar from '../../features/tabbar';
+import Profile from '../../components/user/profile';
+import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { getPosts, getUserProfile } from '../../services/firebase/firestore';
+import Tweet from '../../features/tweet';
+import { pathWoBackslash } from '../../scripts/utils';
+import type { DocumentData } from 'firebase/firestore';
 
 export default function ProfilePage(): JSX.Element {
-  const loaderData = useLoaderData();
-  const [posts, setPosts] = useState<JSX.Element[]>([]);
-  const userData = loaderData.data();
+  // const loaderData = useLoaderData();
+  // const userData = loaderData.data();
+  const [userData, setUserData] = useState<DocumentData | undefined>(null);
   const noUser = pathWoBackslash().toLowerCase();
 
+  // const userData = userDataFetch.data();
+  const [posts, setPosts] = useState<JSX.Element[]>([]);
+
+  // get user
+  useEffect(() => {
+    const userDataFetch = async () => {
+      if (noUser) {
+        const fetchUser = await getUserProfile(noUser);
+        const usersData = fetchUser.data();
+        setUserData(() => usersData);
+      }
+    };
+    userDataFetch().catch(console.error);
+  }, [noUser]);
+
+  // get user posts
   useEffect(() => {
     if (userData?.userHandle) {
       const { userHandle, userName } = userData;
@@ -26,17 +43,18 @@ export default function ProfilePage(): JSX.Element {
               userName={userName}
               userHandle={userHandle}
               text={post.content}
-              imgLink={""}
+              imgLink={''}
               date={post.time}
+              likes={post.likes.length}
             />
           );
         });
-        setPosts(x);
-        postz().catch(console.error);
-        console.log("posts fetched");
+        setPosts(() => x);
       };
+      postz().catch(console.error);
+      console.log('posts fetched');
     }
-  }, [loaderData]);
+  }, [userData]);
 
   return (
     <>

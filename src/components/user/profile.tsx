@@ -1,23 +1,17 @@
-import Avatar from "./avatar";
-import { useAuthContext } from "../../contexts/authContext";
-import { Link } from "react-router-dom";
-import { pathWoBackslash, showMonthAndYear } from "../../scripts/utils";
-import { type DocumentSnapshot, type DocumentData } from "firebase/firestore";
-import { Timestamp } from "firebase/firestore";
-import {
-  changeFirestoreTime,
-  getUserFollowers,
-  getUserFollowing,
-} from "../../services/firebase/firestore";
-import { useEffect, useState } from "react";
-import FollowBtn from "../../features/followBtn";
+import Avatar from './avatar';
+import { useAuthContext } from '../../contexts/authContext';
+import { Link } from 'react-router-dom';
+import { pathWoBackslash, showMonthAndYear } from '../../scripts/utils';
+import { type DocumentSnapshot, type DocumentData } from 'firebase/firestore';
+import { changeFirestoreTime, getUserFollowers, getUserFollowing } from '../../services/firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import FollowBtn from '../../features/followBtn';
+import EditProfile from '../../features/editProfile';
 
-export default function Profile({
-  data,
-}: DocumentSnapshot<DocumentData>): JSX.Element {
+const Profile = ({ data }: DocumentSnapshot<DocumentData | undefined>): JSX.Element => {
   const { userProfile } = useAuthContext();
 
-  function assignedProfile(): JSX.Element {
+  const AssignedProfile = (): JSX.Element => {
     const {
       userHandle,
       userName,
@@ -29,19 +23,19 @@ export default function Profile({
     } = data;
     const [following, setFollowing] = useState(0);
     const [followers, setFollowers] = useState(0);
+    const [showEdit, setShowEdit] = useState(false);
+    const handleEditProfile = (): void => {
+      setShowEdit(() => !showEdit);
+    };
 
     useEffect(() => {
+      // console.trace();
       const fetchData = async (): Promise<void> => {
         const followingCount = await getUserFollowing(userHandle);
-        if (!cancelled) setFollowing(followingCount);
+        if (!cancelled) setFollowing(() => followingCount);
         const followerCount = await getUserFollowers(userHandle);
-        if (!cancelled) setFollowers(followerCount);
-        console.log(
-          "following fetched:",
-          followingCount,
-          "followers:",
-          followerCount
-        );
+        if (!cancelled) setFollowers(() => followerCount);
+        console.log('following fetched:', followingCount, 'followers:', followerCount);
       };
       let cancelled = false;
       fetchData().catch(console.error);
@@ -51,10 +45,7 @@ export default function Profile({
       };
     }, []);
 
-    const theJoinedDate = changeFirestoreTime(
-      joinedDate.seconds,
-      joinedDate.nanoseconds
-    );
+    const theJoinedDate = changeFirestoreTime(joinedDate.seconds, joinedDate.nanoseconds);
     return (
       <>
         <div className="h-[200px] bg-dark-650" />
@@ -64,17 +55,15 @@ export default function Profile({
               <Avatar photoURL={photoURL} size={134} />
             </div>
             {userProfile?.userHandle === userHandle ? (
-              <Link
-                to="settings"
+              <button
+                type="button"
+                onClick={handleEditProfile}
                 className="flex flex-row justify-start flex-wrap items-center border-[1px] border-dark-650 text-sm font-bold rounded-full mb-[11px] px-[15px] min-h-[34px] min-w-[34px]"
               >
                 <span>Edit Profile</span>
-              </Link>
+              </button>
             ) : (
-              <FollowBtn
-                currUser={userProfile?.userHandle}
-                userHandle={userHandle}
-              />
+              <FollowBtn currUser={userProfile?.userHandle} userHandle={userHandle} />
             )}
           </div>
           <div className="mt-1 mb-[11px]">
@@ -131,27 +120,24 @@ export default function Profile({
                   </g>
                 </svg>
               </span>
-              <span className="text-greyTxt">
-                Joined {showMonthAndYear(theJoinedDate)}
-              </span>
+              <span className="text-greyTxt">Joined {showMonthAndYear(theJoinedDate)}</span>
             </div>
           </div>
           <div className="flex flex-row text-[13px] leading-[15px]">
             <div className="mr-[19px]">
-              <span className="font-bold">{following}</span>{" "}
-              <span className="text-greyTxt">Following</span>
+              <span className="font-bold">{following}</span> <span className="text-greyTxt">Following</span>
             </div>
             <div>
-              <span className="font-bold">{followers}</span>{" "}
-              <span className="text-greyTxt">Followers</span>
+              <span className="font-bold">{followers}</span> <span className="text-greyTxt">Followers</span>
             </div>
           </div>
         </div>
+        <EditProfile showModal={showEdit} setShowModal={handleEditProfile} />
       </>
     );
-  }
+  };
 
-  function nullProfile(): JSX.Element {
+  function NullProfile(): JSX.Element {
     const userHandle = pathWoBackslash();
     return (
       <>
@@ -171,5 +157,8 @@ export default function Profile({
     );
   }
 
-  return <>{data ? assignedProfile() : nullProfile()}</>;
-}
+  return <>{data ? <AssignedProfile /> : <NullProfile />}</>;
+};
+
+const MemoProfile = React.memo(Profile);
+export default MemoProfile;

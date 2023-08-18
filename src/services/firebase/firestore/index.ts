@@ -14,27 +14,20 @@ import {
   Timestamp,
   orderBy,
   limit,
-} from "firebase/firestore";
-import { db } from "../../../configs/firebase-config";
+} from 'firebase/firestore';
+import { db } from '../../../configs/firebase-config';
 
 /* 
   PROFILE AND FOLLOW FUNCTIONS
 */
-export async function getUserProfile(
-  params: string
-): Promise<DocumentSnapshot<DocumentData>> {
-  const userProfileRef = doc(db, "user-profiles", params);
+export async function getUserProfile(params: string): Promise<DocumentSnapshot<DocumentData>> {
+  const userProfileRef = doc(db, 'user-profiles', params);
   const docSnap = await getDoc(userProfileRef);
   return docSnap;
 }
 
 export async function getUserFollowing(params: string): Promise<number> {
-  const userFollowingCollection = collection(
-    db,
-    "follows",
-    params,
-    "following"
-  );
+  const userFollowingCollection = collection(db, 'follows', params, 'following');
   const snapshot = await getCountFromServer(userFollowingCollection);
   return snapshot.data().count;
 }
@@ -42,10 +35,7 @@ export async function getUserFollowing(params: string): Promise<number> {
 // TODO: this should eventually become a cloud function and the number should
 // be updated to user-profiles/{userHandle} doc
 export async function getUserFollowers(params: string): Promise<number> {
-  const userQuery = query(
-    collectionGroup(db, "following"),
-    where("userHandle", "==", params)
-  );
+  const userQuery = query(collectionGroup(db, 'following'), where('userHandle', '==', params));
   const userQuerySnapshot = await getCountFromServer(userQuery);
   return userQuerySnapshot.data().count;
 }
@@ -63,7 +53,7 @@ export async function follow(currUser: string, params: string): Promise<void> {
       } else {
         // TODO:
         // - create doc under user
-        void setDoc(doc(db, "follows", currUser), {});
+        void setDoc(doc(db, 'follows', currUser), {});
         // - then create follow
         void setDoc(userFollowRef, { userHandle: params, date: today });
       }
@@ -95,16 +85,9 @@ export async function post(currUser: string, content: string): Promise<void> {
 // fetch 10 recent posts
 
 // THIS DOESNT WORK FOR A USER WITH ONLY ONE POST
-export async function getPosts(
-  currUser: string,
-  quantity?: number
-): Promise<any[]> {
+export async function getPosts(currUser: string, quantity?: number): Promise<any[]> {
   const userPostsColl = collection(db, `posts/${currUser}/user-posts`);
-  const quer = query(
-    userPostsColl,
-    orderBy("seq", "desc"),
-    limit(quantity ?? 10)
-  );
+  const quer = query(userPostsColl, orderBy('seq', 'desc'), limit(quantity ?? 10));
 
   const querSnap = await getDocs(quer);
   const posts = [];
@@ -113,6 +96,10 @@ export async function getPosts(
   });
   return posts;
 }
+
+// like a post
+
+// export async function likeThisPost(currUser: string, postId: string): Promise<void> {}
 
 /* 
   UTILITY FUNCTIONS
