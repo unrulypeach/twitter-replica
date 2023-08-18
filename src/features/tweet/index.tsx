@@ -27,7 +27,7 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
   }, []);
 
   return (
-    <div className="flex flex-row px-[15px] pt-[11px]">
+    <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar">
       <div className="mr-[11px]">
         <Avatar />
       </div>
