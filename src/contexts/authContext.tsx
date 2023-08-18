@@ -163,6 +163,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
           try {
             const x = await getUserProfileFromDB();
             setUserProfile(x);
+            console.log('userProfile set');
           } catch (error) {
             console.error('could not set userProfile', error);
           }

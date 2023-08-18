@@ -43,11 +43,7 @@ export const moreOptions: JSX.Element = (
   </svg>
 );
 export const twitterBirdBlack: JSX.Element = (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    className="max-w-full h-8 text-center"
-  >
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="max-w-full h-8 text-center">
     <g>
       <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z" />
     </g>
@@ -55,11 +51,7 @@ export const twitterBirdBlack: JSX.Element = (
 );
 
 export const twitterBirdBlue: JSX.Element = (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    className="max-w-full h-7 text-center fill-blue"
-  >
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="max-w-full h-7 text-center fill-blue">
     <g>
       <path d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z" />
     </g>
@@ -187,11 +179,7 @@ export const more: JSX.Element = (
 );
 
 export const moreNoBorder: JSX.Element = (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    className="h-[1.25em] inline-block"
-  >
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[1.25em] inline-block">
     <g>
       <path d="M3 12c0-1.1.9-2 2-2s2 .9 2 2-.9 2-2 2-2-.9-2-2zm9 2c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm7 0c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"></path>
     </g>
@@ -199,11 +187,7 @@ export const moreNoBorder: JSX.Element = (
 );
 
 export const search: JSX.Element = (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    className="pl-[11px] min-w-[30px] select-none h-4"
-  >
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="pl-[11px] min-w-[30px] select-none h-4">
     <g>
       <path d="M10.25 3.75c-3.59 0-6.5 2.91-6.5 6.5s2.91 6.5 6.5 6.5c1.795 0 3.419-.726 4.596-1.904 1.178-1.177 1.904-2.801 1.904-4.596 0-3.59-2.91-6.5-6.5-6.5zm-8.5 6.5c0-4.694 3.806-8.5 8.5-8.5s8.5 3.806 8.5 8.5c0 1.986-.682 3.815-1.824 5.262l4.781 4.781-1.414 1.414-4.781-4.781c-1.447 1.142-3.276 1.824-5.262 1.824-4.694 0-8.5-3.806-8.5-8.5z" />
     </g>
@@ -234,6 +218,14 @@ export const like: JSX.Element = (
   </svg>
 );
 
+export const likeFilled: JSX.Element = (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[17.5px] w-[17.5px]">
+    <g>
+      <path d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"></path>
+    </g>
+  </svg>
+);
+
 export const views: JSX.Element = (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[17.5px] w-[17.5px]">
     <g>
@@ -251,11 +243,7 @@ export const share: JSX.Element = (
 );
 
 export const dropdown: JSX.Element = (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    className="fill-blue h-[15px] w-[15px] ml-1"
-  >
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="fill-blue h-[15px] w-[15px] ml-1">
     <g>
       <path d="M3.543 8.96l1.414-1.42L12 14.59l7.043-7.05 1.414 1.42L12 17.41 3.543 8.96z"></path>
     </g>
@@ -263,11 +251,7 @@ export const dropdown: JSX.Element = (
 );
 
 export const globe: JSX.Element = (
-  <svg
-    viewBox="0 0 24 24"
-    aria-hidden="true"
-    className="h-[15px] w-[15px] fill-blue"
-  >
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-[15px] w-[15px] fill-blue">
     <g>
       <path d="M12 1.75C6.34 1.75 1.75 6.34 1.75 12S6.34 22.25 12 22.25 22.25 17.66 22.25 12 17.66 1.75 12 1.75zm-.25 10.48L10.5 17.5l-2-1.5v-3.5L7.5 9 5.03 7.59c1.42-2.24 3.89-3.75 6.72-3.84L11 6l-2 .5L8.5 9l5 1.5-1.75 1.73zM17 14v-3l-1.5-3 2.88-1.23c1.17 1.42 1.87 3.24 1.87 5.23 0 1.3-.3 2.52-.83 3.61L17 14z"></path>
     </g>

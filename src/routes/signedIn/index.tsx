@@ -27,11 +27,13 @@ export default function SignedInHome(): JSX.Element {
         return (
           <Tweet
             key={i}
+            id={post.id}
             userName={userProfile?.userName ?? 'ERROR'}
             userHandle={userHandleOrError}
             text={post.content}
             imgLink={post.imgLink ?? ''}
             date={post.time}
+            likes={post?.likes}
           />
         );
       });

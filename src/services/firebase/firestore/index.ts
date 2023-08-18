@@ -14,6 +14,9 @@ import {
   Timestamp,
   orderBy,
   limit,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from 'firebase/firestore';
 import { db } from '../../../configs/firebase-config';
 
@@ -76,6 +79,7 @@ export async function post(currUser: string, content: string): Promise<void> {
     time: now,
     content,
     seq: seqNum,
+    likes: [],
   };
   addDoc(userPostsColl, postData).catch((error) => {
     console.error(error.code);
@@ -92,14 +96,27 @@ export async function getPosts(currUser: string, quantity?: number): Promise<any
   const querSnap = await getDocs(quer);
   const posts = [];
   querSnap.forEach((doc) => {
-    posts.push(doc.data());
+    posts.push({ id: doc.id, ...doc.data() });
   });
   return posts;
+  // querSnap.map((doc) => {{id: doc.id, ...doc.data()}})
 }
 
 // like a post
 
-// export async function likeThisPost(currUser: string, postId: string): Promise<void> {}
+export async function likeThisPost(currUser: string, postUser: string, postId: string): Promise<void> {
+  const postRef = doc(db, `posts/${postUser}/user-posts/${postId}`);
+  await updateDoc(postRef, {
+    likes: arrayUnion(currUser),
+  });
+}
+
+export async function unlikeThisPost(currUser: string, postUser: string, postId: string): Promise<void> {
+  const postRef = doc(db, `posts/${postUser}/user-posts/${postId}`);
+  await updateDoc(postRef, {
+    likes: arrayRemove(currUser),
+  });
+}
 
 /* 
   UTILITY FUNCTIONS

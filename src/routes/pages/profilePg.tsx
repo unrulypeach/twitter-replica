@@ -36,16 +36,18 @@ export default function ProfilePage(): JSX.Element {
       const { userHandle, userName } = userData;
       const postz = async (): Promise<void> => {
         const dlPosts = await getPosts(userHandle);
+        console.log(dlPosts);
         const x = dlPosts.map((post, i) => {
           return (
             <Tweet
               key={i}
+              id={post.id}
               userName={userName}
               userHandle={userHandle}
               text={post.content}
               imgLink={''}
               date={post.time}
-              likes={post.likes.length}
+              likes={post?.likes}
             />
           );
         });
