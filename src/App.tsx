@@ -12,10 +12,13 @@ import ProfilePage from './routes/pages/profilePg';
 
 import { AuthProvider } from './contexts/authContext';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import PostPg from './routes/pages/postPg';
+import ErrorPage from './routes/pages/error';
 
 const router = createBrowserRouter([
   {
     element: <Layout />,
+    errorElement: <ErrorPage />,
     children: [
       {
         path: '/',
@@ -36,7 +39,10 @@ const router = createBrowserRouter([
           if (params.userHandle) return await getUserProfile(params.userHandle);
           return null;
         }, */
-        children: [{ path: 'settings', element: <EditProfile /> }],
+      },
+      {
+        path: ':userHandle/p/:postId',
+        element: <PostPg />,
       },
     ],
   },
