@@ -1,5 +1,5 @@
-import type HeaderProps from "../../types/headerProps";
-import { setting } from "../../styles/assets/icons/iconData";
+import type HeaderProps from '../../types/headerProps';
+import { setting } from '../../styles/assets/icons/iconData';
 
 export default function Header({ path }: HeaderProps): JSX.Element {
   function withSettings(): JSX.Element {
@@ -15,7 +15,7 @@ export default function Header({ path }: HeaderProps): JSX.Element {
     );
   }
   const lcPath: string = path?.toLowerCase();
-  const pathTwo: boolean = lcPath === "notifications";
+  const pathTwo: boolean = lcPath === 'notifications';
   return (
     <div className="h-[50px] px-[15px]">
       <div className="h-full text-[19px] leading-[23px] font-bold flex items-center">

@@ -34,6 +34,7 @@ export default {
       retweetLineHover: "rgb(0, 186, 124)",
       blueHover: "rgba(29, 155, 240, 0.1)",
       blueLineHover: "rgb(29, 155, 240)",
+      time: "#8B98A5",
     },
     extend: {
       boxShadow: {
