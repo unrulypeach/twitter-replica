@@ -2,7 +2,7 @@ import Header from '../../features/header';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
 import Tabbar from '../../features/tabbar';
 import Profile from '../../components/user/profile';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getPosts, getUserProfile } from '../../services/firebase/firestore';
 import Tweet from '../../features/tweet';
@@ -61,7 +61,7 @@ export default function ProfilePage(): JSX.Element {
   return (
     <>
       <div className="flex flex-row">
-        <div className="max-w-[600px] w-full shrink-0">
+        <div className="w-[600px] shrink-0">
           <div>
             <Header path="Profile" />
           </div>
