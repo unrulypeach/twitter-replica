@@ -1,21 +1,19 @@
-import { useContext, useState } from "react";
-import { SIGNUP_PAGE_CONTEXT } from "../../contexts/userContext";
-import CloseModal from "../signupModal/closeModal";
-import { Link } from "react-router-dom";
+import { useContext, useState } from 'react';
+import { SIGNUP_PAGE_CONTEXT } from '../../contexts/userContext';
+import CloseModal from '../signupModal/closeModal';
+import { Link } from 'react-router-dom';
 
 export default function CreateUsername(): JSX.Element {
   const { setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
 
-  const [username, setUsername] = useState("");
+  const [username, setUsername] = useState('');
   return (
     <div className="max-w-[600px] h-full">
       <div className="flex flex-row w-full pt-3">
         <CloseModal />
 
         <div className="ml-10">
-          <span className="text-[20px] leading-[24px] font-bold">
-            Step: 4 of 5
-          </span>
+          <span className="text-[20px] leading-[24px] font-bold">Step: 4 of 5</span>
         </div>
 
         <div className="grow" />
@@ -25,9 +23,7 @@ export default function CreateUsername(): JSX.Element {
         <div className="flex flex-col px-[80px]">
           <div>
             <div className="my-[20px]">
-              <span className="text-[31px] leading-[36px] font-bold">
-                What should we call you?
-              </span>
+              <span className="text-[31px] leading-[36px] font-bold">What should we call you?</span>
             </div>
             <div>
               <span className="text-[14px] leading-[16px] text-greyTxt">

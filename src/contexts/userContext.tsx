@@ -1,7 +1,7 @@
-import type React from "react";
-import { createContext } from "react";
-import type InewUser from "../types/InewUser";
-import { newUserDefault } from "../defaults/newUserDefault";
+import type React from 'react';
+import { createContext } from 'react';
+import type InewUser from '../types/InewUser';
+import { newUserDefault } from '../defaults/newUserDefault';
 
 interface I_SIGNUP_PAGE_CONTEXT {
   signupPage?: number;

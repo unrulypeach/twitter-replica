@@ -1,10 +1,10 @@
-import SignupModal from "../../features/signupModal";
-import { useContext } from "react";
-import CreateAccount from "../../features/createAccount";
-import CreateUsername from "../../features/createUsername";
-import CreatePw from "../../features/createPw";
-import PickApfp from "../../features/pickApfp";
-import { SIGNUP_PAGE_CONTEXT } from "../../contexts/userContext";
+import SignupModal from '../../features/signupModal';
+import { useContext } from 'react';
+import CreateAccount from '../../features/createAccount';
+import CreateUsername from '../../features/createUsername';
+import CreatePw from '../../features/createPw';
+import PickApfp from '../../features/pickApfp';
+import { SIGNUP_PAGE_CONTEXT } from '../../contexts/userContext';
 
 export default function SignupPopup(): JSX.Element {
   const { signupPage } = useContext(SIGNUP_PAGE_CONTEXT);
