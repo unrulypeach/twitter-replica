@@ -21,6 +21,20 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(likes.length);
 
+  const handleLike = (e) => {
+    e.preventDefault();
+    if (liked) {
+      void unlikeThisPost(userProfile?.userHandle, userHandle, id);
+      setLiked(!liked);
+      setLikesCount((prev) => prev - 1);
+    }
+    if (!liked) {
+      void likeThisPost(userProfile?.userHandle, userHandle, id);
+      setLiked(!liked);
+      setLikesCount((prev) => prev + 1);
+    }
+  };
+
   useEffect(() => {
     if (likes) {
       if (likes.includes(userProfile?.userHandle)) setLiked(true);
@@ -30,7 +44,17 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
   return (
     <Link
       to={`/${userHandle}/p/${id}`}
-      state={{ userName, userHandle, text, imgLink, date, likes, id, liked, setLiked, likesCount, setLikesCount }}
+      state={{
+        userName,
+        userHandle,
+        text,
+        imgLink,
+        date,
+        likes,
+        id,
+        liked,
+        likesCount,
+      }}
     >
       <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar">
         <div className="mr-[11px]">
@@ -69,23 +93,7 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
                 {retweet}
               </div>
             </div>
-            <div
-              className="cursor-pointer group"
-              role="button"
-              tabIndex={0}
-              onClick={() => {
-                if (liked) {
-                  unlikeThisPost(userProfile?.userHandle, userHandle, id);
-                  setLiked(!liked);
-                  setLikesCount((prev) => prev - 1);
-                }
-                if (!liked) {
-                  likeThisPost(userProfile?.userHandle, userHandle, id);
-                  setLiked(!liked);
-                  setLikesCount((prev) => prev + 1);
-                }
-              }}
-            >
+            <div className="cursor-pointer group" role="button" tabIndex={0} onClick={(e) => handleLike(e)}>
               {liked ? (
                 <div className="flex">
                   <div className="rounded-full p-[8px] group-hover:bg-likesHover fill-likesLineHover">{likeFilled}</div>

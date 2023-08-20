@@ -4,12 +4,28 @@ import Avatar from '../../components/user/avatar';
 import { useLocation } from 'react-router-dom';
 import { showMonthDayAndYear, showTime } from '../../scripts/utils';
 import { reply, retweet, like, likeFilled, views, share } from '../../styles/assets/icons/iconData';
+import { useState } from 'react';
+import { likeThisPost, unlikeThisPost } from '../../services/firebase/firestore';
 
 export default function PostPg(): JSX.Element {
   const { userProfile } = useAuthContext();
   const location = useLocation();
-  const { userName, userHandle, text, imgLink, date, likes, id, liked, setLiked, likesCount, setLikesCount } =
-    location.state;
+  const { userName, userHandle, text, imgLink, date, likes, id, liked, likesCount } = location.state;
+  const [thisLiked, setThisLiked] = useState(liked);
+  const [thisLikesCount, setThisLikesCount] = useState(likesCount);
+
+  const handleLike = (e) => {
+    if (thisLiked) {
+      void unlikeThisPost(userProfile?.userHandle, userHandle, id);
+      setThisLiked(!thisLiked);
+      setThisLikesCount((prev) => prev - 1);
+    }
+    if (!thisLiked) {
+      void likeThisPost(userProfile?.userHandle, userHandle, id);
+      setThisLiked(!thisLiked);
+      setThisLikesCount((prev) => prev + 1);
+    }
+  };
 
   return (
     <div className="flex flex-row">
@@ -39,11 +55,13 @@ export default function PostPg(): JSX.Element {
               {retweet}
             </div>
           </div>
-          <div className="cursor-pointer group">
-            {liked ? (
+          <div className="cursor-pointer group" role="button" tabIndex={0} onClick={(e) => handleLike(e)}>
+            {thisLiked ? (
               <div className="flex">
                 <div className="rounded-full p-[8px] group-hover:bg-likesHover fill-likesLineHover">{likeFilled}</div>
-                <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] text-likesLineHover">{likesCount}</span>
+                <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] text-likesLineHover">
+                  {thisLikesCount}
+                </span>
               </div>
             ) : (
               <div className="flex fill-dark-500">
@@ -51,7 +69,7 @@ export default function PostPg(): JSX.Element {
                   {like}
                 </div>
                 <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] group-hover:text-likesLineHover">
-                  {likesCount}
+                  {thisLikesCount}
                 </span>
               </div>
             )}
