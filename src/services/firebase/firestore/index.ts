@@ -102,6 +102,25 @@ export async function getPosts(currUser: string, quantity?: number): Promise<any
   // querSnap.map((doc) => {{id: doc.id, ...doc.data()}})
 }
 
+export async function postReply(currUser: string, postUser: string, postId: string, reply: string) {
+  const now = await getFirestoreTime();
+  const postRef = collection(db, `posts/${postUser}/user-posts/${postId}/comments`);
+  const docRef = await addDoc(postRef, {
+    userHandle: currUser,
+    content: reply,
+    times: now,
+    likes: [],
+  });
+}
+
+export async function getReplies(postUser: string, postId: string) {
+  const postQuery = await getDocs(collection(db, `posts/${postUser}/user-posts/${postId}/comments`));
+  const replies = [];
+  postQuery.forEach((doc) => {
+    replies.push({ id: doc.id, ...doc.data() });
+  });
+  return replies;
+}
 // like a post
 
 export async function likeThisPost(currUser: string, postUser: string, postId: string): Promise<void> {

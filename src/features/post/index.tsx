@@ -1,22 +1,19 @@
-import { useState } from "react";
-import Avatar from "../../components/user/avatar";
-import { useAuthContext } from "../../contexts/authContext";
-import {
-  dropdown,
-  emoji,
-  gif,
-  globe,
-  location,
-  media,
-  poll,
-  schedule,
-} from "../../styles/assets/icons/iconData";
-import { post } from "../../services/firebase/firestore";
+import { useState, useRef, useEffect } from 'react';
+import Avatar from '../../components/user/avatar';
+import { useAuthContext } from '../../contexts/authContext';
+import { dropdown, emoji, gif, globe, location, media, poll, schedule } from '../../styles/assets/icons/iconData';
+import { post } from '../../services/firebase/firestore';
 
 export default function Post(): JSX.Element {
   const { userProfile } = useAuthContext();
-  // const inputRef = useRef(null);
-  const [postValue, setPostValue] = useState("");
+  const [postValue, setPostValue] = useState('');
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    textareaRef.current.style.height = '0px';
+    const scrollHeight = textareaRef.current.scrollHeight;
+    textareaRef.current.style.height = scrollHeight + 'px';
+  }, [postValue]);
 
   return (
     <div className="flex flex-row w-[598px] border-b-[1px] border-searchbar py-1 px-[15px]">
@@ -32,9 +29,9 @@ export default function Post(): JSX.Element {
             </div>
           </div>
           <div className="py-[11px]">
-            <input
-              type="text"
-              className="border-0 outline-none"
+            <textarea
+              ref={textareaRef}
+              className="border-0 outline-none resize-none w-full"
               placeholder="What's happening?"
               value={postValue}
               onChange={(e) => {
@@ -74,8 +71,7 @@ export default function Post(): JSX.Element {
             <button
               className="bg-blue min-w-[34px] min-h-[34px] opacity-50 flex px-[15px] ml-11px rounded-full"
               onClick={() => {
-                if (userProfile?.userHandle)
-                  void post(userProfile?.userHandle, postValue);
+                if (userProfile?.userHandle) void post(userProfile?.userHandle, postValue);
                 // add post to feed
               }}
             >

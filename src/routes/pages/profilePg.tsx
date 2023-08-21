@@ -36,7 +36,6 @@ export default function ProfilePage(): JSX.Element {
       const { userHandle, userName } = userData;
       const postz = async (): Promise<void> => {
         const dlPosts = await getPosts(userHandle);
-        console.log(dlPosts);
         const x = dlPosts.map((post, i) => {
           return (
             <Tweet

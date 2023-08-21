@@ -123,10 +123,6 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
               </div>
             </div>
           </div>
-
-          {/* <div>
-          <span className="text-blue">Show this thread</span>
-        </div> */}
         </div>
       </div>
     </Link>
