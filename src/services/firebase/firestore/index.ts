@@ -87,8 +87,6 @@ export async function post(currUser: string, content: string): Promise<void> {
 }
 
 // fetch 10 recent posts
-
-// THIS DOESNT WORK FOR A USER WITH ONLY ONE POST
 export async function getPosts(currUser: string, quantity?: number): Promise<any[]> {
   const userPostsColl = collection(db, `posts/${currUser}/user-posts`);
   const quer = query(userPostsColl, orderBy('seq', 'desc'), limit(quantity ?? 10));
@@ -96,19 +94,26 @@ export async function getPosts(currUser: string, quantity?: number): Promise<any
   const querSnap = await getDocs(quer);
   const posts = [];
   querSnap.forEach((doc) => {
-    posts.push({ id: doc.id, ...doc.data() });
+    posts.push({ id: doc.id, path: doc.ref.path, ...doc.data() });
   });
   return posts;
   // querSnap.map((doc) => {{id: doc.id, ...doc.data()}})
 }
 
-export async function postReply(currUser: string, postUser: string, postId: string, reply: string) {
+export async function postReply(
+  currUserhandle: string,
+  currUsername: string,
+  postUser: string,
+  postId: string,
+  reply: string,
+) {
   const now = await getFirestoreTime();
   const postRef = collection(db, `posts/${postUser}/user-posts/${postId}/comments`);
   const docRef = await addDoc(postRef, {
-    userHandle: currUser,
+    userHandle: currUserhandle,
+    userName: currUsername,
     content: reply,
-    times: now,
+    time: now,
     likes: [],
   });
 }
@@ -117,21 +122,21 @@ export async function getReplies(postUser: string, postId: string) {
   const postQuery = await getDocs(collection(db, `posts/${postUser}/user-posts/${postId}/comments`));
   const replies = [];
   postQuery.forEach((doc) => {
-    replies.push({ id: doc.id, ...doc.data() });
+    replies.push({ id: doc.id, path: doc.ref.path, ...doc.data() });
   });
   return replies;
 }
-// like a post
 
-export async function likeThisPost(currUser: string, postUser: string, postId: string): Promise<void> {
-  const postRef = doc(db, `posts/${postUser}/user-posts/${postId}`);
+// like a post
+export async function likeThisPost(currUser: string, postPath: string): Promise<void> {
+  const postRef = doc(db, postPath);
   await updateDoc(postRef, {
     likes: arrayUnion(currUser),
   });
 }
 
-export async function unlikeThisPost(currUser: string, postUser: string, postId: string): Promise<void> {
-  const postRef = doc(db, `posts/${postUser}/user-posts/${postId}`);
+export async function unlikeThisPost(currUser: string, postPath: string): Promise<void> {
+  const postRef = doc(db, postPath);
   await updateDoc(postRef, {
     likes: arrayRemove(currUser),
   });

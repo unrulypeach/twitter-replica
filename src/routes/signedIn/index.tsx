@@ -34,6 +34,7 @@ export default function SignedInHome(): JSX.Element {
             imgLink={post.imgLink ?? ''}
             date={post.time}
             likes={post?.likes}
+            path={post?.path}
           />
         );
       });
@@ -42,6 +43,7 @@ export default function SignedInHome(): JSX.Element {
     postz().catch(console.error);
     console.log('posts fetched');
   }, [userProfile?.userHandle, userProfile?.userName]);
+
   return (
     <div className="flex flex-row">
       <div>
@@ -54,7 +56,7 @@ export default function SignedInHome(): JSX.Element {
         </div>
 
         <div>
-          <Post />
+          <Post setPosts={setPosts} />
         </div>
 
         <div>

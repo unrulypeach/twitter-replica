@@ -5,33 +5,36 @@ import { useLocation } from 'react-router-dom';
 import { showMonthDayAndYear, showTime } from '../../scripts/utils';
 import { reply, retweet, like, likeFilled, views, share } from '../../styles/assets/icons/iconData';
 import { useRef, useState, useEffect } from 'react';
-import { getReplies, likeThisPost, postReply, unlikeThisPost } from '../../services/firebase/firestore';
+import { findReply, getReplies, likeThisPost, postReply, unlikeThisPost } from '../../services/firebase/firestore';
 import Tweet from '../../features/tweet';
 
 export default function PostPg(): JSX.Element {
   const { userProfile } = useAuthContext();
   const location = useLocation();
-  const { userName, userHandle, text, imgLink, date, likes, id, liked, likesCount } = location.state;
+  // TODO: extract data only if location.state is NOT NULL
+  const { userName, userHandle, text, imgLink, date, likes, id, liked, likesCount, path } = location.state;
   const [thisLiked, setThisLiked] = useState(liked);
-  const [thisLikesCount, setThisLikesCount] = useState(likesCount);
+  // const [thisLikesCount, setThisLikesCount] = useState(likesCount);
   const textareaRef = useRef(null);
   const [currentValue, setCurrentValue] = useState('');
 
   const handleLike = (e) => {
     if (thisLiked) {
-      void unlikeThisPost(userProfile?.userHandle, userHandle, id);
+      void unlikeThisPost(userProfile?.userHandle, path);
       setThisLiked(!thisLiked);
-      setThisLikesCount((prev) => prev - 1);
+      // setThisLikesCount((prev) => prev - 1);
     }
     if (!thisLiked) {
-      void likeThisPost(userProfile?.userHandle, userHandle, id);
+      void likeThisPost(userProfile?.userHandle, path);
       setThisLiked(!thisLiked);
-      setThisLikesCount((prev) => prev + 1);
+      // setThisLikesCount((prev) => prev + 1);
     }
   };
 
   const handleSubmitReply = () => {
-    void postReply(userProfile?.userHandle, userHandle, id, currentValue).then(setCurrentValue(''));
+    void postReply(userProfile?.userHandle, userProfile?.userName, userHandle, id, currentValue).then(
+      setCurrentValue(''),
+    );
   };
 
   const [replies, setReplies] = useState([]);
@@ -49,14 +52,15 @@ export default function PostPg(): JSX.Element {
         const x = dlReplies.map((post) => {
           return (
             <Tweet
-              key={id}
+              key={post?.id}
               id={post?.id}
-              userName={''}
+              userName={post?.userName}
               userHandle={post?.userHandle}
               text={post?.content}
               imgLink={''}
               date={post?.time}
               likes={post?.likes}
+              path={post?.path}
             />
           );
         });
@@ -64,7 +68,7 @@ export default function PostPg(): JSX.Element {
       };
       replies().catch(console.error);
     }
-  }, []);
+  }, [location]);
 
   return (
     <div className="flex flex-row">
@@ -103,18 +107,18 @@ export default function PostPg(): JSX.Element {
             {thisLiked ? (
               <div className="flex">
                 <div className="rounded-full p-[8px] group-hover:bg-likesHover fill-likesLineHover">{likeFilled}</div>
-                <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] text-likesLineHover">
+                {/*  <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] text-likesLineHover">
                   {thisLikesCount}
-                </span>
+                </span> */}
               </div>
             ) : (
               <div className="flex fill-dark-500">
                 <div className="rounded-full p-[8px] group-hover:bg-likesHover group-hover:fill-likesLineHover">
                   {like}
                 </div>
-                <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] group-hover:text-likesLineHover">
+                {/* <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] group-hover:text-likesLineHover">
                   {thisLikesCount}
-                </span>
+                </span> */}
               </div>
             )}
           </div>

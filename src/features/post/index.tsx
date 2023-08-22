@@ -4,7 +4,7 @@ import { useAuthContext } from '../../contexts/authContext';
 import { dropdown, emoji, gif, globe, location, media, poll, schedule } from '../../styles/assets/icons/iconData';
 import { post } from '../../services/firebase/firestore';
 
-export default function Post(): JSX.Element {
+export default function Post({ setPosts }): JSX.Element {
   const { userProfile } = useAuthContext();
   const [postValue, setPostValue] = useState('');
   const textareaRef = useRef(null);

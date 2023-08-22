@@ -47,6 +47,7 @@ export default function ProfilePage(): JSX.Element {
               imgLink={''}
               date={post.time}
               likes={post?.likes}
+              path={post?.path}
             />
           );
         });

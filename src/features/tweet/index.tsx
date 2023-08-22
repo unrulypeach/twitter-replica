@@ -15,8 +15,9 @@ interface TweetProps {
   date: Timestamp;
   likes: Array<string>;
   id: string;
+  path: string;
 }
-export default function Tweet({ userName, userHandle, text, imgLink, date, likes, id }: TweetProps): JSX.Element {
+export default function Tweet({ userName, userHandle, text, imgLink, date, likes, id, path }: TweetProps): JSX.Element {
   const { userProfile } = useAuthContext();
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(likes.length);
@@ -24,12 +25,12 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
   const handleLike = (e) => {
     e.preventDefault();
     if (liked) {
-      void unlikeThisPost(userProfile?.userHandle, userHandle, id);
+      void unlikeThisPost(userProfile?.userHandle, path);
       setLiked(!liked);
       setLikesCount((prev) => prev - 1);
     }
     if (!liked) {
-      void likeThisPost(userProfile?.userHandle, userHandle, id);
+      void likeThisPost(userProfile?.userHandle, path);
       setLiked(!liked);
       setLikesCount((prev) => prev + 1);
     }
@@ -54,6 +55,7 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
         id,
         liked,
         likesCount,
+        path,
       }}
     >
       <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar">
