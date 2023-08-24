@@ -1,4 +1,3 @@
-import EditProfile from './features/editProfile';
 import LSideMenu from './routes/pages/lSideMenu';
 import SignupPopup from './components/signup';
 import LoginPopup from './components/login';
