@@ -26,7 +26,7 @@ import Avatar from '../../user/avatar';
 export default function SignedInLSideMenu(): JSX.Element {
   const { userProfile } = useAuthContext();
   return (
-    <div className="h-full w-[275px] med:w-[88px] px-[8x] flex flex-col justify-between med:items-center">
+    <div className="border-r-[1px] border-searchbar fixed med:left-0 h-full w-[275px] med:w-[88px] px-[8x] flex flex-col justify-between med:items-center">
       <div>
         <Link to="/">
           <div className="flex items-center px-[11px] py-[2px] h-[47px]">{twitterBirdBlue}</div>

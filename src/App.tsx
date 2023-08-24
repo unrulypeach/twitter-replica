@@ -57,7 +57,7 @@ function Layout(): JSX.Element {
     <>
       <AuthProvider>
         <div className="flex flex-row justify-center">
-          <div className="border-r-[1px] border-searchbar h-screen">
+          <div className="h-screen">
             <LSideMenu />
           </div>
           <Outlet />

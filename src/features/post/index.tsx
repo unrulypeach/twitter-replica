@@ -7,6 +7,8 @@ import { post } from '../../services/firebase/firestore';
 export default function Post({ setPosts }): JSX.Element {
   const { userProfile } = useAuthContext();
   const [postValue, setPostValue] = useState('');
+  const [imgFile, setImgFile] = useState<File | undefined>(undefined);
+  const [previewImg, setPreviewImg] = useState<string | undefined>();
   const textareaRef = useRef(null);
 
   useEffect(() => {
@@ -14,6 +16,16 @@ export default function Post({ setPosts }): JSX.Element {
     const scrollHeight = textareaRef.current.scrollHeight;
     textareaRef.current.style.height = scrollHeight + 'px';
   }, [postValue]);
+
+  useEffect(() => {
+    if (!imgFile) {
+      setPreviewImg(undefined);
+      return;
+    }
+    const objectUrl = URL.createObjectURL(imgFile);
+    setPreviewImg(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [imgFile]);
 
   return (
     <div className="flex flex-row w-[598px] border-b-[1px] border-searchbar py-1 px-[15px]">
@@ -39,6 +51,11 @@ export default function Post({ setPosts }): JSX.Element {
               }}
             />
           </div>
+          {previewImg && (
+            <div className="pb-[11px]">
+              <img src={previewImg} alt="" />
+            </div>
+          )}
         </div>
 
         <div className="flex flex-row text-[13px] font-bold leading-[15px] pb-[11px]">
@@ -49,21 +66,32 @@ export default function Post({ setPosts }): JSX.Element {
         <div className="flex flex-row justify-between pt-[9px] ml-[-8px]">
           <div className="flex flex-row">
             <div className="blue-icon-positioning">
-              <div className="">{media}</div>
+              <label htmlFor="post-pic" className="cursor-pointer">
+                {media}
+              </label>
+              <input
+                id="post-pic"
+                accept="image/*"
+                type="file"
+                className="invisible h-0 w-0"
+                onChange={(e) => {
+                  if (e.target.files) setImgFile(e.target.files[0]);
+                }}
+              />
             </div>
-            <div className="blue-icon-positioning">
+            <div className="blue-icon-positioning opacity-40">
               <div>{gif}</div>
             </div>
-            <div className="blue-icon-positioning">
+            <div className="blue-icon-positioning opacity-40">
               <div>{poll}</div>
             </div>
-            <div className="blue-icon-positioning">
+            <div className="blue-icon-positioning opacity-40">
               <div>{emoji}</div>
             </div>
-            <div className="blue-icon-positioning">
+            <div className="blue-icon-positioning opacity-40">
               <div>{schedule}</div>
             </div>
-            <div className="blue-icon-positioning">
+            <div className="blue-icon-positioning opacity-40">
               <div>{location}</div>
             </div>
           </div>
