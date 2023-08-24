@@ -2,17 +2,19 @@ import Header from '../../features/header';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
 import Tabbar from '../../features/tabbar';
 import Profile from '../../components/user/profile';
-import { Outlet, useLocation, useParams } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { getPosts, getUserProfile } from '../../services/firebase/firestore';
 import Tweet from '../../features/tweet';
 import { pathWoBackslash } from '../../scripts/utils';
 import type { DocumentData } from 'firebase/firestore';
+import { useAuthContext } from '../../contexts/authContext';
 
 export default function ProfilePage(): JSX.Element {
   // const loaderData = useLoaderData();
   // const userData = loaderData.data();
-  const [userData, setUserData] = useState<DocumentData | undefined>(null);
+  const { userProfile } = useAuthContext();
+  const [userData, setUserData] = useState<DocumentData | null>(null);
   const noUser = pathWoBackslash().toLowerCase();
 
   // const userData = userDataFetch.data();
@@ -28,7 +30,7 @@ export default function ProfilePage(): JSX.Element {
       }
     };
     userDataFetch().catch(console.error);
-  }, [noUser]);
+  }, [noUser, userProfile]);
 
   // get user posts
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function ProfilePage(): JSX.Element {
               id={post.id}
               userName={userName}
               userHandle={userHandle}
+              userPic={userData?.photoURL ?? ''}
               text={post.content}
               imgLink={''}
               date={post.time}
@@ -66,7 +69,7 @@ export default function ProfilePage(): JSX.Element {
             <Header path="Profile" />
           </div>
 
-          <div>{userData ? <Profile data={userData} /> : `@${noUser}`}</div>
+          <div>{userData ? <Profile data={userData} setData={setUserData} /> : `@${noUser}`}</div>
 
           {userData && (
             <div>

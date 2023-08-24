@@ -1,6 +1,5 @@
 import Avatar from './avatar';
 import { useAuthContext } from '../../contexts/authContext';
-import { Link } from 'react-router-dom';
 import { pathWoBackslash, showMonthAndYear } from '../../scripts/utils';
 import { type DocumentSnapshot, type DocumentData } from 'firebase/firestore';
 import { changeFirestoreTime, getUserFollowers, getUserFollowing } from '../../services/firebase/firestore';
@@ -8,19 +7,16 @@ import React, { useEffect, useState } from 'react';
 import FollowBtn from '../../features/followBtn';
 import EditProfile from '../../features/editProfile';
 
-const Profile = ({ data }: DocumentSnapshot<DocumentData | undefined>): JSX.Element => {
+interface IProfile {
+  data: DocumentSnapshot<DocumentData | undefined>;
+  setData: React.Dispatch<React.SetStateAction<DocumentData | null>>;
+}
+
+const Profile = ({ data, setData }: IProfile): JSX.Element => {
   const { userProfile } = useAuthContext();
 
   const AssignedProfile = (): JSX.Element => {
-    const {
-      userHandle,
-      userName,
-      photoURL,
-      joinedDate,
-      bio,
-      // location,
-      // website,
-    } = data;
+    const { userHandle, userName, photoURL, joinedDate, bio } = data;
     const [following, setFollowing] = useState(0);
     const [followers, setFollowers] = useState(0);
     const [showEdit, setShowEdit] = useState(false);
@@ -29,7 +25,6 @@ const Profile = ({ data }: DocumentSnapshot<DocumentData | undefined>): JSX.Elem
     };
 
     useEffect(() => {
-      // console.trace();
       const fetchData = async (): Promise<void> => {
         const followingCount = await getUserFollowing(userHandle);
         if (!cancelled) setFollowing(() => followingCount);
@@ -48,7 +43,11 @@ const Profile = ({ data }: DocumentSnapshot<DocumentData | undefined>): JSX.Elem
     const theJoinedDate = changeFirestoreTime(joinedDate.seconds, joinedDate.nanoseconds);
     return (
       <>
-        <div className="h-[200px] bg-dark-650" />
+        {data?.bgURL ? (
+          <div style={{ backgroundImage: `url(${data.bgURL})` }} className="h-[200px]" />
+        ) : (
+          <div className="h-[200px] bg-dark-650" />
+        )}
         <div className="flex flex-col px-[15px] pt-[11px]">
           <div className="flex justify-between basis-auto items-start">
             <div className="relative mt-[-15%] mb-[11px] border-white border-4 rounded-full">
@@ -132,7 +131,7 @@ const Profile = ({ data }: DocumentSnapshot<DocumentData | undefined>): JSX.Elem
             </div>
           </div>
         </div>
-        <EditProfile showModal={showEdit} setShowModal={handleEditProfile} />
+        <EditProfile setUserInfo={setData} showModal={showEdit} setShowModal={handleEditProfile} data={data} />
       </>
     );
   };

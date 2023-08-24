@@ -31,7 +31,10 @@ interface IAuthContext {
   updateUserPhoto?: (photoURL: string) => Promise<void>;
 
   uploadUserPhoto?: (file: File) => Promise<string | undefined>;
-  setUserPhotoinDB?: (photoURL: string) => Promise<void>;
+  // setUserPhotoinDB?: (photoURL: string) => Promise<void>;
+  uploadBgPhoto?: (file: File) => Promise<void>;
+
+  editUserProfile?: (userHandle: string, props: object) => Promise<void>;
 }
 
 const AuthContext = createContext({});
@@ -80,7 +83,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   }
 
   // uploads photo to cloud storage & store in DB
-  async function uploadUserPhoto(file: File): Promise<void> {
+  async function uploadUserPhoto(file: File): Promise<string> {
     const { currentUser } = auth;
     if (currentUser)
       try {
@@ -90,11 +93,30 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
         await uploadBytesResumable(newImageRef, file);
 
         const publicImageUrl = await getDownloadURL(newImageRef);
-        await updateDoc(doc(db, 'user-profiles', userUid), {
+        await updateDoc(doc(db, 'user-profiles', userProfile?.userHandle), {
           photoURL: publicImageUrl,
         });
+
+        return publicImageUrl;
       } catch (error) {
         console.error('error uploading to cloud storage', error);
+      }
+  }
+
+  async function uploadBgPhoto(file: File): Promise<void> {
+    const { currentUser } = auth;
+    if (currentUser)
+      try {
+        const filePath = `${currentUser.uid}/${file.name}`;
+        const newImageRef = ref(storage, filePath);
+        await uploadBytesResumable(newImageRef, file);
+
+        const publicImageUrl = await getDownloadURL(newImageRef);
+        await updateDoc(doc(db, 'user-profiles', userProfile?.userHandle), {
+          bgURL: publicImageUrl,
+        });
+      } catch (error) {
+        console.error('error uploading to cloud storage:', error);
       }
   }
 
@@ -154,6 +176,13 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       });
   }
 
+  async function editUserProfile(userHandle: string, props: object) {
+    const userProfileRef = doc(db, 'user-profiles', userHandle);
+    await setDoc(userProfileRef, props, { merge: true });
+    const x = await getUserProfileFromDB();
+    setUserProfile(x);
+  }
+
   useEffect(() => {
     const unsub = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -188,7 +217,9 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       updateUserHandle,
       updateUserName,
       uploadUserPhoto,
+      uploadBgPhoto,
       updateUserPhoto,
+      editUserProfile,
     };
   }, [currentUser, userProfile]);
 

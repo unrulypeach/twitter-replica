@@ -35,6 +35,8 @@ export default {
       blueHover: "rgba(29, 155, 240, 0.1)",
       blueLineHover: "rgb(29, 155, 240)",
       time: "#8B98A5",
+      imgBg: "rgba(15, 20, 25, 0.75)",
+      imgHov: "rgba(39, 44, 48, 0.75)",
     },
     extend: {
       boxShadow: {

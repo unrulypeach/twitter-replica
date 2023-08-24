@@ -16,8 +16,19 @@ interface TweetProps {
   likes: Array<string>;
   id: string;
   path: string;
+  userPic: string;
 }
-export default function Tweet({ userName, userHandle, text, imgLink, date, likes, id, path }: TweetProps): JSX.Element {
+export default function Tweet({
+  userName,
+  userHandle,
+  text,
+  imgLink,
+  date,
+  likes,
+  id,
+  path,
+  userPic,
+}: TweetProps): JSX.Element {
   const { userProfile } = useAuthContext();
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(likes.length);
@@ -60,7 +71,7 @@ export default function Tweet({ userName, userHandle, text, imgLink, date, likes
     >
       <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar">
         <div className="mr-[11px]">
-          <Avatar />
+          <Avatar photoURL={userPic} />
         </div>
 
         <div className="flex flex-col justify-center grow">

@@ -30,6 +30,7 @@ export default function SignedInHome(): JSX.Element {
             id={post.id}
             userName={userProfile?.userName ?? 'ERROR'}
             userHandle={userHandleOrError}
+            userPic={userProfile?.photoURL ?? ''}
             text={post.content}
             imgLink={post.imgLink ?? ''}
             date={post.time}

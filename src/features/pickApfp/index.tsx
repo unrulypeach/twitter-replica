@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
-import CloseModal from "../signupModal/closeModal";
-import { SIGNUP_PAGE_CONTEXT } from "../../contexts/userContext";
-import { useAuthContext } from "../../contexts/authContext";
+import { useContext, useState } from 'react';
+import CloseModal from '../signupModal/closeModal';
+import { SIGNUP_PAGE_CONTEXT } from '../../contexts/userContext';
+import { useAuthContext } from '../../contexts/authContext';
 
 export default function PickApfp(): JSX.Element {
   const { signupPage, setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
@@ -18,9 +18,7 @@ export default function PickApfp(): JSX.Element {
         <CloseModal />
 
         <div className="ml-10">
-          <span className="text-[20px] leading-[24px] font-bold">
-            Step: 3 of 5
-          </span>
+          <span className="text-[20px] leading-[24px] font-bold">Step: 3 of 5</span>
         </div>
 
         <div className="grow" />
@@ -30,14 +28,10 @@ export default function PickApfp(): JSX.Element {
         <div className="flex flex-col px-[80px]">
           <div>
             <div className="my-[20px]">
-              <span className="text-[31px] leading-[36px] font-bold">
-                Pick a profile
-              </span>
+              <span className="text-[31px] leading-[36px] font-bold">Pick a profile</span>
             </div>
             <div>
-              <span className="text-[14px] leading-[16px] text-greyTxt">
-                Have a favorite selfie? Upload it now.
-              </span>
+              <span className="text-[14px] leading-[16px] text-greyTxt">Have a favorite selfie? Upload it now.</span>
             </div>
           </div>
 
@@ -70,7 +64,7 @@ export default function PickApfp(): JSX.Element {
           type="button"
           onClick={handleNext}
         >
-          {file ? "Submit" : "Skip for now"}
+          {file ? 'Submit' : 'Skip for now'}
         </button>
       </div>
     </div>
