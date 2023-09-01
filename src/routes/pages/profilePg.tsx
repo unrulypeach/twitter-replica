@@ -11,22 +11,23 @@ import type { DocumentData } from 'firebase/firestore';
 import { useAuthContext } from '../../contexts/authContext';
 
 export default function ProfilePage(): JSX.Element {
-  // const loaderData = useLoaderData();
-  // const userData = loaderData.data();
   const { userProfile } = useAuthContext();
   const [userData, setUserData] = useState<DocumentData | null>(null);
   const noUser = pathWoBackslash().toLowerCase();
-
-  // const userData = userDataFetch.data();
+  const [loading, setLoading] = useState(true);
+  const [postLoading, setPostLoading] = useState(true);
   const [posts, setPosts] = useState<JSX.Element[]>([]);
 
   // get user
   useEffect(() => {
+    setLoading(true);
     const userDataFetch = async () => {
       if (noUser) {
+        setPosts([]);
         const fetchUser = await getUserProfile(noUser);
         const usersData = fetchUser.data();
         setUserData(() => usersData);
+        setLoading(() => false);
       }
     };
     userDataFetch().catch(console.error);
@@ -34,6 +35,7 @@ export default function ProfilePage(): JSX.Element {
 
   // get user posts
   useEffect(() => {
+    setPostLoading(true);
     if (userData?.userHandle) {
       const { userHandle, userName } = userData;
       const postz = async (): Promise<void> => {
@@ -47,7 +49,7 @@ export default function ProfilePage(): JSX.Element {
               userHandle={userHandle}
               userPic={userData?.photoURL ?? ''}
               text={post.content}
-              imgLink={''}
+              imgLink={post.photoURL ?? ''}
               date={post.time}
               likes={post?.likes}
               path={post?.path}
@@ -55,6 +57,7 @@ export default function ProfilePage(): JSX.Element {
           );
         });
         setPosts(() => x);
+        setPostLoading(false);
       };
       postz().catch(console.error);
       console.log('posts fetched');
@@ -64,12 +67,18 @@ export default function ProfilePage(): JSX.Element {
   return (
     <>
       <div className="flex flex-row">
-        <div className="w-[600px] shrink-0">
+        <div className="w-[600px] shrink-1 border-r-[1px] border-r-searchbar">
           <div>
             <Header path="Profile" />
           </div>
 
-          <div>{userData ? <Profile data={userData} setData={setUserData} /> : `@${noUser}`}</div>
+          {loading ? (
+            <div className="flex justify-center items-center h-[415px]">
+              <div className="loader" />
+            </div>
+          ) : (
+            <>{!userData ? <p>THIS ACCOUNT DOES NOT EXIST</p> : <Profile data={userData} setData={setUserData} />}</>
+          )}
 
           {userData && (
             <div>
@@ -77,12 +86,16 @@ export default function ProfilePage(): JSX.Element {
             </div>
           )}
 
-          {!userData && <p>THIS ACCOUNT DOESNT EXIST</p>}
-
-          {posts && posts}
+          {postLoading ? (
+            <div className="flex justify-center pt-[40px]">
+              <div className="loader" />
+            </div>
+          ) : (
+            <>{posts && posts}</>
+          )}
         </div>
 
-        <div>
+        <div className="sticky top-0 self-start">
           <SignedInRSideMenu path="" />
         </div>
       </div>

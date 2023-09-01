@@ -17,8 +17,10 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
+  deleteDoc,
 } from 'firebase/firestore';
-import { db } from '../../../configs/firebase-config';
+import { db, storage } from '../../../configs/firebase-config';
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 /* 
   PROFILE AND FOLLOW FUNCTIONS
@@ -37,10 +39,17 @@ export async function getUserFollowing(params: string): Promise<number> {
 
 // TODO: this should eventually become a cloud function and the number should
 // be updated to user-profiles/{userHandle} doc
-export async function getUserFollowers(params: string): Promise<number> {
+export async function getUserFollowers(params: string): Promise<Array<string>> {
   const userQuery = query(collectionGroup(db, 'following'), where('userHandle', '==', params));
-  const userQuerySnapshot = await getCountFromServer(userQuery);
-  return userQuerySnapshot.data().count;
+  const querySnapshot = await getDocs(userQuery);
+  const data = [];
+  querySnapshot.forEach((doc) => {
+    data.push(doc.ref.parent.parent.id);
+  });
+  return data;
+  // return querySnapshot;
+  /* const userQuerySnapshot = await getCountFromServer(userQuery);
+  return userQuerySnapshot.data().count; */
 }
 
 export async function follow(currUser: string, params: string): Promise<void> {
@@ -66,24 +75,51 @@ export async function follow(currUser: string, params: string): Promise<void> {
     });
 }
 
+// TODO
+export async function unfollow(currUser, forUser): Promise<void> {
+  const followDoc = doc(db, `follows/${currUser}/following/${forUser}`);
+  await deleteDoc(followDoc);
+}
+
 /* 
   POST FUNCTIONS
 */
 
-export async function post(currUser: string, content: string): Promise<void> {
+export async function post(
+  currUser: string,
+  content: string | undefined,
+  photoFile?: File | Array<File>,
+): Promise<void> {
   const now = await getFirestoreTime();
   const userPostsColl = collection(db, `posts/${currUser}/user-posts`);
   const colCount = await getCountFromServer(userPostsColl);
   const seqNum = colCount.data().count;
-  const postData = {
-    time: now,
-    content,
-    seq: seqNum,
-    likes: [],
-  };
+  const photoURL = photoFile ? await uploadPostPhoto(currUser, photoFile) : null;
+  const postData = photoURL
+    ? {
+        time: now,
+        content,
+        seq: seqNum,
+        likes: [],
+        photoURL,
+      }
+    : {
+        time: now,
+        content,
+        seq: seqNum,
+        likes: [],
+      };
   addDoc(userPostsColl, postData).catch((error) => {
     console.error(error.code);
   });
+}
+
+export async function uploadPostPhoto(user: string, file: File): Promise<string> {
+  const newImageRef = ref(storage, `${user}/${file.name}`);
+  await uploadBytesResumable(newImageRef, file);
+
+  const publicImageUrl = await getDownloadURL(newImageRef);
+  return publicImageUrl;
 }
 
 // fetch 10 recent posts

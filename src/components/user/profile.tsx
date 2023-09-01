@@ -2,11 +2,15 @@ import Avatar from './avatar';
 import { useAuthContext } from '../../contexts/authContext';
 import { pathWoBackslash, showMonthAndYear } from '../../scripts/utils';
 import { type DocumentSnapshot, type DocumentData } from 'firebase/firestore';
-import { changeFirestoreTime, getUserFollowers, getUserFollowing } from '../../services/firebase/firestore';
+import {
+  changeFirestoreTime,
+  getUserFollowers,
+  getUserFollowing,
+  follow,
+  unfollow,
+} from '../../services/firebase/firestore';
 import React, { useEffect, useState } from 'react';
-import FollowBtn from '../../features/followBtn';
 import EditProfile from '../../features/editProfile';
-
 interface IProfile {
   data: DocumentSnapshot<DocumentData | undefined>;
   setData: React.Dispatch<React.SetStateAction<DocumentData | null>>;
@@ -18,8 +22,9 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
   const AssignedProfile = (): JSX.Element => {
     const { userHandle, userName, photoURL, joinedDate, bio } = data;
     const [following, setFollowing] = useState(0);
-    const [followers, setFollowers] = useState(0);
+    const [followers, setFollowers] = useState([]);
     const [showEdit, setShowEdit] = useState(false);
+    const [isCurrUserFoll, setIsCurrUserFoll] = useState(undefined);
     const handleEditProfile = (): void => {
       setShowEdit(() => !showEdit);
     };
@@ -28,9 +33,13 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
       const fetchData = async (): Promise<void> => {
         const followingCount = await getUserFollowing(userHandle);
         if (!cancelled) setFollowing(() => followingCount);
-        const followerCount = await getUserFollowers(userHandle);
-        if (!cancelled) setFollowers(() => followerCount);
-        console.log('following fetched:', followingCount, 'followers:', followerCount);
+        const followerArray = await getUserFollowers(userHandle);
+        if (!cancelled) setFollowers(() => followerArray);
+        if (userProfile?.userHandle !== userHandle) {
+          const ifFollow = followerArray.indexOf(userProfile?.userHandle) >= 0;
+          setIsCurrUserFoll(ifFollow);
+        }
+        // console.log('following fetched:', followingCount, 'followers:', followerCount);
       };
       let cancelled = false;
       fetchData().catch(console.error);
@@ -62,7 +71,37 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
                 <span>Edit Profile</span>
               </button>
             ) : (
-              <FollowBtn currUser={userProfile?.userHandle} userHandle={userHandle} />
+              <>
+                {isCurrUserFoll ? (
+                  <button
+                    className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full group group-hover:border-likesLineHover group-hover:border-solid-[1px]"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      void unfollow(userProfile?.userHandle, userHandle);
+                      setIsCurrUserFoll((prev) => !prev);
+                    }}
+                  >
+                    <div className="btn-follow w-[65px]">
+                      {/* on hover switch words to Unfollow */}
+                      <span className="group-hover:hidden">Following</span>
+                      <span className="hidden group-hover:block text-likesLineHover">Unfollow</span>
+                    </div>
+                  </button>
+                ) : (
+                  <button
+                    className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      if (userProfile?.userHandle && userHandle) void follow(userProfile?.userHandle, userHandle);
+                      setIsCurrUserFoll((prev) => !prev);
+                    }}
+                  >
+                    <div className="btn-follow">
+                      <span>Follow</span>
+                    </div>
+                  </button>
+                )}
+              </>
             )}
           </div>
           <div className="mt-1 mb-[11px]">
@@ -127,7 +166,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
               <span className="font-bold">{following}</span> <span className="text-greyTxt">Following</span>
             </div>
             <div>
-              <span className="font-bold">{followers}</span> <span className="text-greyTxt">Followers</span>
+              <span className="font-bold">{followers.length}</span> <span className="text-greyTxt">Followers</span>
             </div>
           </div>
         </div>

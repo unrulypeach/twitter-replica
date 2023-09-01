@@ -45,6 +45,7 @@ export default {
     },
     screens: {
       'med': {'max': '1200px'},
+      'maxRmenu': {'max': '1040px'},
     }
   },
   plugins: [],

@@ -9,8 +9,8 @@ export default function ExplorePage(): JSX.Element {
   const { currentUser } = useAuthContext();
   return (
     <div className="flex flex-row ">
-      <div className="flex flex-col w-[600px]">
-        <div>
+      <div className="flex flex-col w-[600px] border-r-[1px] border-r-searchbar">
+        <div className="px-[15px]">
           <Searchbar />
         </div>
 

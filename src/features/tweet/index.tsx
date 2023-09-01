@@ -90,12 +90,22 @@ export default function Tweet({
                 <div>
                   <span>{text} </span>
                 </div>
-                {imgLink !== undefined ? <img src={imgLink} alt="" /> : <></>}
+                <div>
+                  {imgLink ? (
+                    <img
+                      className="border-searchbar border-solid-[1px] rounded-2xl mt-[11px] h-[510px] w-[408px]"
+                      src={imgLink}
+                      alt=""
+                    />
+                  ) : (
+                    <></>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="mt-[11px] flex flex-row justify-between max-w-[425px]">
+          <div className="mt-[11px] flex flex-row justify-between max-w-[510px]">
             <div className="fill-dark-500 cursor-pointer group">
               <div className="rounded-full p-[8px] group-hover:bg-blueHover group-hover:fill-blueLineHover">
                 {reply}

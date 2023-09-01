@@ -1,16 +1,14 @@
-import type TweetProps from "../../types/tweetProps";
+import type TweetProps from '../../types/tweetProps';
 
-export default function TweetContent({
-  text,
-  imgLink,
-}: TweetProps): JSX.Element {
+export default function TweetContent({ text, imgLink }: TweetProps): JSX.Element {
+  const img = <img className="rounded-2xl" alt="" src={imgLink} />;
   return (
     <div>
       <div>
         <div>
-          <span>{text} </span>
+          <span>{text}</span>
         </div>
-        {imgLink !== undefined ? <img src={imgLink} /> : <></>}
+        <div>{imgLink ? img : <></>}</div>
       </div>
     </div>
   );

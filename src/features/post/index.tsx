@@ -4,7 +4,8 @@ import { useAuthContext } from '../../contexts/authContext';
 import { dropdown, emoji, gif, globe, location, media, poll, schedule } from '../../styles/assets/icons/iconData';
 import { post } from '../../services/firebase/firestore';
 
-export default function Post({ setPosts }): JSX.Element {
+// setPosts is received only from <SignedInHome />
+export default function Post({ setShouldUpdate }): JSX.Element {
   const { userProfile } = useAuthContext();
   const [postValue, setPostValue] = useState('');
   const [imgFile, setImgFile] = useState<File | undefined>(undefined);
@@ -26,6 +27,25 @@ export default function Post({ setPosts }): JSX.Element {
     setPreviewImg(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
   }, [imgFile]);
+
+  const handlePost = () => {
+    if (userProfile?.userHandle) {
+      if (imgFile)
+        void post(userProfile?.userHandle, postValue, imgFile).then(() => {
+          setPostValue('');
+          setImgFile(undefined);
+          setPreviewImg(undefined);
+          setShouldUpdate((prev) => !prev);
+        });
+      void post(userProfile?.userHandle, postValue).then(() => {
+        setPostValue('');
+        setImgFile(undefined);
+        setPreviewImg(undefined);
+        setShouldUpdate((prev) => !prev);
+      });
+    }
+    // add post to feed
+  };
 
   return (
     <div className="flex flex-row w-[598px] border-b-[1px] border-searchbar py-1 px-[15px]">
@@ -53,7 +73,7 @@ export default function Post({ setPosts }): JSX.Element {
           </div>
           {previewImg && (
             <div className="pb-[11px]">
-              <img src={previewImg} alt="" />
+              <img className="rounded-2xl" src={previewImg} alt="" />
             </div>
           )}
         </div>
@@ -97,10 +117,10 @@ export default function Post({ setPosts }): JSX.Element {
           </div>
           <div>
             <button
+              style={{ opacity: postValue || imgFile ? 1 : 0.5 }}
               className="bg-blue min-w-[34px] min-h-[34px] opacity-50 flex px-[15px] ml-11px rounded-full"
               onClick={() => {
-                if (userProfile?.userHandle) void post(userProfile?.userHandle, postValue);
-                // add post to feed
+                if (postValue || imgFile) handlePost();
               }}
             >
               <div className="btn-tweet">

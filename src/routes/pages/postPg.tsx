@@ -5,7 +5,7 @@ import { useLocation } from 'react-router-dom';
 import { showMonthDayAndYear, showTime } from '../../scripts/utils';
 import { reply, retweet, like, likeFilled, views, share } from '../../styles/assets/icons/iconData';
 import { useRef, useState, useEffect } from 'react';
-import { findReply, getReplies, likeThisPost, postReply, unlikeThisPost } from '../../services/firebase/firestore';
+import { getReplies, likeThisPost, postReply, unlikeThisPost } from '../../services/firebase/firestore';
 import Tweet from '../../features/tweet';
 
 export default function PostPg(): JSX.Element {
@@ -89,6 +89,7 @@ export default function PostPg(): JSX.Element {
         </div>
         {/* POST CONTENT */}
         <div className="mt-[11px] text-[16px] leading-[23px] px-[15px]">{text}</div>
+        {imgLink ? <img className="rounded-2xl mt-[11px] mx-[15px]" src={imgLink} alt="" /> : <></>}
         {/* DATE POSTED */}
         <div className="py-[15px] text-[14px] leading-[19px] text-time px-[15px]">
           {showTime(date)} {showMonthDayAndYear(date)}
@@ -107,18 +108,12 @@ export default function PostPg(): JSX.Element {
             {thisLiked ? (
               <div className="flex">
                 <div className="rounded-full p-[8px] group-hover:bg-likesHover fill-likesLineHover">{likeFilled}</div>
-                {/*  <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] text-likesLineHover">
-                  {thisLikesCount}
-                </span> */}
               </div>
             ) : (
               <div className="flex fill-dark-500">
                 <div className="rounded-full p-[8px] group-hover:bg-likesHover group-hover:fill-likesLineHover">
                   {like}
                 </div>
-                {/* <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] group-hover:text-likesLineHover">
-                  {thisLikesCount}
-                </span> */}
               </div>
             )}
           </div>

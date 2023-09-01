@@ -6,7 +6,7 @@ import { pathWoBackslash } from '../../scripts/utils';
 export default function NotificationsPage(): JSX.Element {
   return (
     <div className="flex flex-row">
-      <div className="w-[600px]">
+      <div className="w-[600px] w-[600px] border-r-[1px] border-r-searchbar">
         <div>
           <Header path={pathWoBackslash()} />
         </div>

@@ -34,10 +34,6 @@ const router = createBrowserRouter([
       {
         path: ':userHandle',
         element: <ProfilePage />,
-        /* loader: async ({ params }) => {
-          if (params.userHandle) return await getUserProfile(params.userHandle);
-          return null;
-        }, */
       },
       {
         path: ':userHandle/p/:postId',
@@ -56,7 +52,7 @@ function Layout(): JSX.Element {
     <>
       <AuthProvider>
         <div className="flex flex-row justify-center">
-          <div className="h-screen">
+          <div className="h-screen sticky top-0">
             <LSideMenu />
           </div>
           <Outlet />
