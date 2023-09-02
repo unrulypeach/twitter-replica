@@ -72,12 +72,12 @@ export default function CreateUsername(): JSX.Element {
       <div className="flex flex-col px-[80px]">
         <Link
           to="/"
-          className="bg-black text-white h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+          className="bg-black text-white flex items-center justify-center h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
           onClick={() => {
             if (setSignupPage) setSignupPage(0);
           }}
         >
-          Finish
+          <span>Finish</span>
         </Link>
       </div>
     </div>

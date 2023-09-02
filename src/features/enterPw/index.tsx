@@ -1,13 +1,13 @@
-import CloseModal from "../signupModal/closeModal";
-import { hidePw, viewPw } from "../../styles/assets/icons/iconData";
-import { useContext, useState } from "react";
-import { useAuthContext } from "../../contexts/authContext";
-import { LOGIN_PAGE_CONTEXT } from "../../contexts/userContext";
-import { Link } from "react-router-dom";
+import CloseModal from '../signupModal/closeModal';
+import { hidePw, viewPw } from '../../styles/assets/icons/iconData';
+import { useContext, useState } from 'react';
+import { useAuthContext } from '../../contexts/authContext';
+import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
+import { Link } from 'react-router-dom';
 
 export default function EnterPw(): JSX.Element {
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
-  const [pw, setPw] = useState("");
+  const [pw, setPw] = useState('');
   const [showPw, setShowPw] = useState(false);
   const { login, userProfile } = useAuthContext();
 
@@ -19,7 +19,7 @@ export default function EnterPw(): JSX.Element {
         },
         (error) => {
           console.log(error);
-        }
+        },
       );
   }
 
@@ -34,9 +34,7 @@ export default function EnterPw(): JSX.Element {
         <div className="flex flex-col px-[80px]">
           <div>
             <div className="my-[20px]">
-              <span className="text-[31px] leading-[36px] font-bold">
-                Enter your password
-              </span>
+              <span className="text-[31px] leading-[36px] font-bold">Enter your password</span>
             </div>
           </div>
 
@@ -61,7 +59,7 @@ export default function EnterPw(): JSX.Element {
                   </div>
                   <div className="label-signup flex flex-row">
                     <input
-                      type={showPw ? "text" : "password"}
+                      type={showPw ? 'text' : 'password'}
                       className="input-signup"
                       placeholder=" "
                       required
@@ -88,7 +86,7 @@ export default function EnterPw(): JSX.Element {
       <div className="flex flex-col px-[80px]">
         <Link
           to="/"
-          className="bg-black text-white h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+          className="bg-black text-white flex justify-center items-center h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
           onClick={() => {
             void handleNext();
           }}
