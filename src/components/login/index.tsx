@@ -1,7 +1,7 @@
-import { useContext } from "react";
-import { LOGIN_PAGE_CONTEXT } from "../../contexts/userContext";
-import LoginModal from "../../features/loginModal";
-import EnterPw from "../../features/enterPw";
+import { useContext } from 'react';
+import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
+import LoginModal from '../../features/loginModal';
+import EnterPw from '../../features/enterPw';
 
 export default function LoginPopup(): JSX.Element {
   const { loginPage } = useContext(LOGIN_PAGE_CONTEXT);

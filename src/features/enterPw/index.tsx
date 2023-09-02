@@ -13,7 +13,7 @@ export default function EnterPw(): JSX.Element {
 
   async function handleNext(): Promise<void> {
     if (login && userProfile?.email)
-      login(userProfile.email, pw).then(
+      await login(userProfile.email, pw).then(
         () => {
           if (setLoginPage) setLoginPage(0);
         },
