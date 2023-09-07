@@ -31,13 +31,15 @@ export default function Post({ setShouldUpdate }): JSX.Element {
   const handlePost = () => {
     if (userProfile?.userHandle) {
       if (imgFile)
-        void post(userProfile?.userHandle, postValue, imgFile).then(() => {
-          setPostValue('');
-          setImgFile(undefined);
-          setPreviewImg(undefined);
-          setShouldUpdate((prev) => !prev);
-        });
-      void post(userProfile?.userHandle, postValue).then(() => {
+        void post(userProfile?.userHandle, userProfile?.userName, userProfile?.photoURL, postValue, imgFile).then(
+          () => {
+            setPostValue('');
+            setImgFile(undefined);
+            setPreviewImg(undefined);
+            setShouldUpdate((prev) => !prev);
+          },
+        );
+      void post(userProfile?.userHandle, userProfile?.userName, userProfile?.photoURL, postValue).then(() => {
         setPostValue('');
         setImgFile(undefined);
         setPreviewImg(undefined);

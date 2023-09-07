@@ -8,6 +8,8 @@ import {
   signInWithEmailAndPassword,
   updateProfile,
   signOut,
+  GoogleAuthProvider,
+  signInWithPopup,
 } from 'firebase/auth';
 import { auth, storage, db } from '../configs/firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
@@ -18,21 +20,22 @@ interface IAuthContext {
   userProfile?: ProfileProps;
   setUserProfile?: React.Dispatch<React.SetStateAction<ProfileProps | undefined>>;
 
-  createUser?: (email: string, password: string) => Promise<UserCredential>;
-  createUserInDB?: (user: UserCredential, birthdate: Date | undefined) => Promise<void>;
+  createUser: (email: string, password: string) => Promise<UserCredential>;
+  createUserInDB: (user: UserCredential, birthdate: Date | undefined) => Promise<void>;
 
-  login?: (email: string, password: string) => Promise<UserCredential>;
-  logout?: () => Promise<void>;
+  login: (email: string, password: string) => Promise<UserCredential>;
+  logout: () => Promise<void>;
+  loginWithGooglePopup: () => Promise<UserCredential>;
 
-  getUserProfileFromDB?: () => Promise<DocumentData | undefined>;
+  getUserProfileFromDB: () => Promise<DocumentData | undefined>;
 
-  updateUserHandle?: (newHandle: string) => Promise<void>;
-  updateUserName?: (displayName: string) => Promise<void>;
-  updateUserPhoto?: (photoURL: string) => Promise<void>;
+  updateUserHandle: (newHandle: string) => Promise<void>;
+  updateUserName: (displayName: string) => Promise<void>;
+  updateUserPhoto: (photoURL: string) => Promise<void>;
 
-  uploadUserPhoto?: (file: File) => Promise<string | undefined>;
+  uploadUserPhoto: (file: File) => Promise<string | undefined>;
   // setUserPhotoinDB?: (photoURL: string) => Promise<void>;
-  uploadBgPhoto?: (file: File) => Promise<void>;
+  uploadBgPhoto: (file: File) => Promise<void>;
 
   editUserProfile?: (userHandle: string, props: object) => Promise<void>;
 }
@@ -53,17 +56,17 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
 
   async function createUserInDB(user: UserCredential, birthdate: Date | undefined): Promise<void> {
     try {
-      const username = user.user.displayName ?? undefined;
+      const username = user.user.displayName;
       const docData = {
         uid: user.user.uid,
         birthdate,
         email: user.user.email ?? undefined,
         userName: username,
-        userHandle: uniqid(username),
+        userHandle: uniqid(username.replace(/\s/g, '')),
         joinedDate: new Date(),
       };
       setUserProfile(docData);
-      const newUserRef = doc(db, 'user-profiles', docData.userHandle);
+      const newUserRef = doc(db, 'user-profiles', docData.uid);
       await setDoc(newUserRef, docData);
     } catch (error) {
       console.error('error creating user in db', error);
@@ -83,7 +86,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   }
 
   // uploads photo to cloud storage & store in DB
-  async function uploadUserPhoto(file: File): Promise<string> {
+  async function uploadUserPhoto(file: File): Promise<string | undefined> {
     const { currentUser } = auth;
     if (currentUser)
       try {
@@ -93,7 +96,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
         await uploadBytesResumable(newImageRef, file);
 
         const publicImageUrl = await getDownloadURL(newImageRef);
-        await updateDoc(doc(db, 'user-profiles', userProfile?.userHandle), {
+        await updateDoc(doc(db, 'user-profiles', userUid), {
           photoURL: publicImageUrl,
         });
 
@@ -136,6 +139,13 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
     //     console.error(error, error.code);
     //   }
     // );
+  }
+
+  // if (first login) => createUserInDB
+  // else => fetch user
+  async function loginWithGooglePopup() {
+    const provider = new GoogleAuthProvider();
+    return await signInWithPopup(auth, provider);
   }
 
   async function logout(): Promise<void> {
@@ -212,6 +222,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       createUser,
       createUserInDB,
       login,
+      loginWithGooglePopup,
       getUserProfileFromDB,
       logout,
       updateUserHandle,

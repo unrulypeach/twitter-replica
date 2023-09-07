@@ -5,7 +5,7 @@ import NoHome from '../../components/noContent/noHome';
 import { useAuthContext } from '../../contexts/authContext';
 import Tweet from '../../features/tweet';
 import { useState, useEffect } from 'react';
-import { getPosts } from '../../services/firebase/firestore';
+import { getHomePosts } from '../../services/firebase/firestore';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
 
 export default function SignedInHome(): JSX.Element {
@@ -15,19 +15,19 @@ export default function SignedInHome(): JSX.Element {
   const { userProfile } = useAuthContext();
   useEffect(() => {
     const postz = async (): Promise<void> => {
-      const userHandleOrError = userProfile?.userHandle ?? 'ERROR';
-      if (userHandleOrError === 'ERROR') {
+      // const userHandleOrError = userProfile?.userHandle ?? 'ERROR';
+      if (!userProfile?.userHandle) {
         return;
       }
-      const dlPosts = await getPosts(userHandleOrError);
+      const dlPosts = await getHomePosts();
       const mappedPosts = dlPosts.map((post, i) => {
         return (
           <Tweet
             key={i}
             id={post.id}
-            userName={userProfile?.userName ?? 'ERROR'}
-            userHandle={userHandleOrError}
-            userPic={userProfile?.photoURL ?? ''}
+            userName={post.userName}
+            userHandle={post.userHandle}
+            userPic={post.userPic ?? ''}
             text={post.content}
             imgLink={post.photoURL ?? ''}
             date={post.time}
@@ -37,9 +37,9 @@ export default function SignedInHome(): JSX.Element {
         );
       });
       setPosts(mappedPosts);
+      console.log('home posts fetched');
     };
     postz().catch(console.error);
-    console.log('posts fetched');
   }, [userProfile?.userHandle, userProfile?.userName, shouldUpdate]);
 
   return (

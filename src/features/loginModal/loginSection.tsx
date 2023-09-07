@@ -1,9 +1,9 @@
-import { useContext, useState } from "react";
-import { LOGIN_PAGE_CONTEXT } from "../../contexts/userContext";
-import { useAuthContext } from "../../contexts/authContext";
+import { useContext, useState } from 'react';
+import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
+import { useAuthContext } from '../../contexts/authContext';
 
 export default function LoginSection(): JSX.Element {
-  const [loginEmail, setLoginEmail] = useState("");
+  const [loginEmail, setLoginEmail] = useState('');
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
   const { userProfile, setUserProfile } = useAuthContext();
   return (
@@ -48,8 +48,7 @@ export default function LoginSection(): JSX.Element {
           type="button"
           onClick={() => {
             if (setLoginPage) setLoginPage(1);
-            if (setUserProfile)
-              setUserProfile({ ...userProfile, email: loginEmail });
+            if (setUserProfile) setUserProfile({ ...userProfile, email: loginEmail });
           }}
         >
           Next

@@ -11,7 +11,7 @@ interface IEditProfile {
   setUserInfo: React.Dispatch<React.SetStateAction<DocumentData | null>>;
 }
 export default function EditProfile({ showModal, setShowModal, data, setUserInfo }: IEditProfile): JSX.Element {
-  const { editUserProfile, uploadUserPhoto, uploadBgPhoto } = useAuthContext();
+  const { editUserProfile, uploadUserPhoto, uploadBgPhoto, userProfile, setUserProfile } = useAuthContext();
   const { bio, location, website, userName, userHandle, photoURL } = data;
   const [name, setName] = useState(userName ?? '');
   const [bioState, setBioState] = useState(bio ?? '');
@@ -29,9 +29,13 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
       location: locationState,
       website: websiteState,
     };
-    if (imgFile) void uploadUserPhoto(imgFile);
+    let userPic;
+    if (imgFile) userPic = await uploadUserPhoto(imgFile);
+    setUserProfile((prev) => {
+      return { ...prev, photoURL: userPic };
+    });
     if (bgImgFile) void uploadBgPhoto(bgImgFile);
-    void editUserProfile(userHandle, newEdit);
+    void editUserProfile(userProfile?.uid, newEdit);
   };
 
   const handleClosePg = () => {

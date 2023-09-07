@@ -20,15 +20,35 @@ import {
   deleteDoc,
 } from 'firebase/firestore';
 import { db, storage } from '../../../configs/firebase-config';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
+import { StringFormat, getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 
 /* 
   PROFILE AND FOLLOW FUNCTIONS
 */
+
 export async function getUserProfile(params: string): Promise<DocumentSnapshot<DocumentData>> {
-  const userProfileRef = doc(db, 'user-profiles', params);
-  const docSnap = await getDoc(userProfileRef);
-  return docSnap;
+  const userProfileRef = collection(db, 'user-profiles');
+
+  const userQuery = query(userProfileRef, where('userHandle', '==', params));
+  const userSnap = await getDocs(userQuery);
+  const result = [];
+  userSnap.forEach((doc) => {
+    result.push(doc.data());
+  });
+  return result[0];
+}
+
+export async function getUserProfileByUid(uid: string) {
+  const userRef = collection(db, 'user-profiles');
+
+  const userQuery = query(userRef, where('uid', '==', uid));
+  const userSnap = await getDocs(userQuery);
+  const result = [];
+  userSnap.forEach((doc) => {
+    result.push(doc.data());
+    console.log(doc.id, '=>', doc.data());
+  });
+  return result;
 }
 
 export async function getUserFollowing(params: string): Promise<number> {
@@ -75,8 +95,7 @@ export async function follow(currUser: string, params: string): Promise<void> {
     });
 }
 
-// TODO
-export async function unfollow(currUser, forUser): Promise<void> {
+export async function unfollow(currUser: string, forUser: StringFormat): Promise<void> {
   const followDoc = doc(db, `follows/${currUser}/following/${forUser}`);
   await deleteDoc(followDoc);
 }
@@ -87,6 +106,8 @@ export async function unfollow(currUser, forUser): Promise<void> {
 
 export async function post(
   currUser: string,
+  userName: string,
+  userPic: string | undefined,
   content: string | undefined,
   photoFile?: File | Array<File>,
 ): Promise<void> {
@@ -96,14 +117,29 @@ export async function post(
   const seqNum = colCount.data().count;
   const photoURL = photoFile ? await uploadPostPhoto(currUser, photoFile) : null;
   const postData = photoURL
-    ? {
-        time: now,
-        content,
-        seq: seqNum,
-        likes: [],
-        photoURL,
-      }
+    ? userPic
+      ? {
+          userHandle: currUser,
+          userName,
+          userPic,
+          time: now,
+          content,
+          seq: seqNum,
+          likes: [],
+          photoURL,
+        }
+      : {
+          userHandle: currUser,
+          userName,
+          time: now,
+          content,
+          seq: seqNum,
+          likes: [],
+          photoURL,
+        }
     : {
+        userHandle: currUser,
+        userName,
         time: now,
         content,
         seq: seqNum,
@@ -122,7 +158,7 @@ export async function uploadPostPhoto(user: string, file: File): Promise<string>
   return publicImageUrl;
 }
 
-// fetch 10 recent posts
+// fetch 10 recent posts for specific user
 export async function getPosts(currUser: string, quantity?: number): Promise<any[]> {
   const userPostsColl = collection(db, `posts/${currUser}/user-posts`);
   const quer = query(userPostsColl, orderBy('seq', 'desc'), limit(quantity ?? 10));
@@ -134,6 +170,21 @@ export async function getPosts(currUser: string, quantity?: number): Promise<any
   });
   return posts;
   // querSnap.map((doc) => {{id: doc.id, ...doc.data()}})
+}
+
+// TODO: fetch more posts
+// export async function getMorePosts(){};
+
+export async function getHomePosts() {
+  const postColl = collectionGroup(db, 'user-posts');
+  const quer = query(postColl, orderBy('time'), limit(10));
+
+  const querSnap = await getDocs(quer);
+  const posts = [];
+  querSnap.forEach((doc) => {
+    posts.push({ id: doc.id, path: doc.ref.path, ...doc.data() });
+  });
+  return posts;
 }
 
 export async function postReply(

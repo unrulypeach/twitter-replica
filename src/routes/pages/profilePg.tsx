@@ -25,8 +25,7 @@ export default function ProfilePage(): JSX.Element {
       if (noUser) {
         setPosts([]);
         const fetchUser = await getUserProfile(noUser);
-        const usersData = fetchUser.data();
-        setUserData(() => usersData);
+        setUserData(() => fetchUser);
         setLoading(() => false);
       }
     };
@@ -47,7 +46,7 @@ export default function ProfilePage(): JSX.Element {
               id={post.id}
               userName={userName}
               userHandle={userHandle}
-              userPic={userData?.photoURL ?? ''}
+              userPic={post?.photoURL ?? ''}
               text={post.content}
               imgLink={post.photoURL ?? ''}
               date={post.time}
@@ -91,7 +90,15 @@ export default function ProfilePage(): JSX.Element {
               <div className="loader" />
             </div>
           ) : (
-            <>{posts && posts}</>
+            <>
+              {posts.length > 0 ? (
+                posts
+              ) : (
+                <div className="flex justify-center p-[28px] text-dark-600">
+                  <p>No tweets yet.</p>
+                </div>
+              )}
+            </>
           )}
         </div>
 
