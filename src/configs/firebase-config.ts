@@ -16,21 +16,21 @@ const firebaseConfig = {
 // auth
 const app = initializeApp(firebaseConfig);
 export default app;
-// export const auth = getAuth(app);
-export const auth = getAuth();
-connectAuthEmulator(auth, 'http://localhost:9099');
+export const auth = getAuth(app);
+/* export const auth = getAuth();
+connectAuthEmulator(auth, 'http://localhost:9099'); */
 
 // cloud storage
-export const storage = getStorage();
-// export const storage = getStorage(app);
+// export const storage = getStorage();
+export const storage = getStorage(app);
 // export const storageRef = ref(storage);
-if (location.hostname === 'localhost') {
+/* if (location.hostname === 'localhost') {
   connectStorageEmulator(storage, 'localhost', 9199);
-}
+} */
 
 // firestore
-// export const db = getFirestore(app);
-export const db = getFirestore();
+export const db = getFirestore(app);
+/* export const db = getFirestore();
 if (location.hostname === 'localhost') {
   connectFirestoreEmulator(db, 'localhost', 8080);
-}
+} */
