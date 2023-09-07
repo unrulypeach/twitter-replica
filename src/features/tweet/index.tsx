@@ -69,16 +69,20 @@ export default function Tweet({
         path,
       }}
     >
-      <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar">
-        <div className="mr-[11px]">
-          <Avatar photoURL={userPic} />
-        </div>
+      <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar hover:bg-tweetHov">
+        <Link to={`/${userHandle}`}>
+          <div className="mr-[11px] hover:shadow-inverse rounded-full">
+            <Avatar photoURL={userPic} />
+          </div>
+        </Link>
 
-        <div className="flex flex-col justify-center grow">
+        <div className="flex flex-col justify-center grow ">
           <div className="mb-[2px] flex flex-row justify-between leading-[19px]">
             <div>
-              <span className="text-[14px] leading-[19px] font-bold">{userName} </span>
-              <span className="text-[13px] leading-[19px] text-greyTxt">@{userHandle} ·</span>
+              <Link to={`/${userHandle}`}>
+                <span className="text-[14px] leading-[19px] font-bold hover:underline">{userName} </span>
+                <span className="text-[13px] leading-[19px] text-greyTxt">@{userHandle} ·</span>
+              </Link>
               <span className="text-[13px] leading-[19px] text-greyTxt"> {convertToTimeSince(date)}</span>
             </div>
             <div>{moreNoBorder}</div>

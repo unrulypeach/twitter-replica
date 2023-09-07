@@ -137,6 +137,16 @@ export async function post(
           likes: [],
           photoURL,
         }
+    : userPic
+    ? {
+        userHandle: currUser,
+        userName,
+        userPic,
+        time: now,
+        content,
+        seq: seqNum,
+        likes: [],
+      }
     : {
         userHandle: currUser,
         userName,

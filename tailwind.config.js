@@ -37,10 +37,13 @@ export default {
       time: "#8B98A5",
       imgBg: "rgba(15, 20, 25, 0.75)",
       imgHov: "rgba(39, 44, 48, 0.75)",
+      tweetHov: "rgba(0, 0, 0, 0.03)",
+      avatarHov: "rgba(26, 26, 26, 0.15)",
     },
     extend: {
       boxShadow: {
-        'reg': 'rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px'
+        'reg': 'rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px',
+        'inverse': 'inset 0 0 0 1000px rgba(26, 26, 26, 0.15)',
       }
     },
     screens: {

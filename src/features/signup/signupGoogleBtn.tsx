@@ -32,7 +32,7 @@ export default function SignupGoogleBtn(): JSX.Element {
                   email: user.email,
                   userName: user.displayName,
                   joinedDate: new Date(),
-                  userHandle: uniqid(user.displayName?.replace(/\s/g, '').toLowerCase()),
+                  userHandle: uniqid(user.displayName?.replace(/\s+/g, '').toLowerCase()),
                   //birthdate
                 };
                 setUserProfile(createUserData);

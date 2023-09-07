@@ -46,7 +46,7 @@ export default function ProfilePage(): JSX.Element {
               id={post.id}
               userName={userName}
               userHandle={userHandle}
-              userPic={post?.photoURL ?? ''}
+              userPic={post?.userPic ?? ''}
               text={post.content}
               imgLink={post.photoURL ?? ''}
               date={post.time}

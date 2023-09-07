@@ -62,7 +62,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
         birthdate,
         email: user.user.email ?? undefined,
         userName: username,
-        userHandle: uniqid(username.replace(/\s/g, '')),
+        userHandle: uniqid(username.replace(/\s+/g, '')),
         joinedDate: new Date(),
       };
       setUserProfile(docData);
