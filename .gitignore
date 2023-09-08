@@ -26,3 +26,5 @@ dist-ssr
 #firebase
 testData/*
 *.rules
+# Local Netlify folder
+.netlify
