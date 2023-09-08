@@ -1,10 +1,6 @@
 import defaultPic from '../../styles/assets/default_profile.png';
 
-export default function Avatar({ photoURL = defaultPic, size = 39 }): JSX.Element {
-  const picSize = (size) => {
-    return `h-[${size}px] w-[${size}px]`;
-  };
-  const twSize = picSize(size);
+export default function Avatar({ photoURL = defaultPic, size = 39 }: { photoURL: string; size: number }): JSX.Element {
   return size === 39 ? (
     <>
       <img className="h-[39px] w-[39px] rounded-full object-cover" src={photoURL || defaultPic} alt="" />
