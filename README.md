@@ -94,7 +94,7 @@ You will need to create an account with [Firebase](https://firebase.google.com/)
     storageBucket: ENTER_YOUR_API,
     messagingSenderId: ENTER_YOUR_API,
     appId: ENTER_YOUR_API,
-  };
+   };
    ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
