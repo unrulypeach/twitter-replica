@@ -25,7 +25,7 @@ export default function ExplorePage(): JSX.Element {
         </div>
       </div>
 
-      <div>{currentUser?.uid ? <SignedInRSideMenu path="explore" /> : <SignedOutRSideMenu />}</div>
+      <div>{currentUser?.token ? <SignedInRSideMenu path="explore" /> : <SignedOutRSideMenu />}</div>
     </div>
   );
 }

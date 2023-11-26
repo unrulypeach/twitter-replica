@@ -49,7 +49,7 @@ export default function SignedInLSideMenu(): JSX.Element {
         <ProfileMini />
       </div>
       <div className="hidden med:block self-center">
-        <Avatar photoURL={userProfile?.photoURL} />
+        <Avatar profile_pic={userProfile?.profile_pic} />
       </div>
     </div>
   );

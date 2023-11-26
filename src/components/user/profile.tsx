@@ -11,6 +11,7 @@ import {
 } from '../../services/firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import EditProfile from '../../features/editProfile';
+import axios from '../../api/axios';
 interface IProfile {
   data: DocumentSnapshot<DocumentData | undefined>;
   setData: React.Dispatch<React.SetStateAction<DocumentData | null>>;
@@ -20,7 +21,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
   const { userProfile } = useAuthContext();
 
   const AssignedProfile = (): JSX.Element => {
-    const { userHandle, userName, photoURL, joinedDate, bio } = data;
+    const { userhandle, username, profile_pic, joined_date, bio } = data;
     const [following, setFollowing] = useState(0);
     const [followers, setFollowers] = useState([]);
     const [showEdit, setShowEdit] = useState(false);
@@ -29,14 +30,14 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
       setShowEdit(() => !showEdit);
     };
 
-    useEffect(() => {
+    /* useEffect(() => {
       const fetchData = async (): Promise<void> => {
-        const followingCount = await getUserFollowing(userHandle);
+        const followingCount = await getUserFollowing(userhandle);
         if (!cancelled) setFollowing(() => followingCount);
-        const followerArray = await getUserFollowers(userHandle);
+        const followerArray = await getUserFollowers(userhandle);
         if (!cancelled) setFollowers(() => followerArray);
-        if (userProfile?.userHandle !== userHandle) {
-          const ifFollow = followerArray.indexOf(userProfile?.userHandle) >= 0;
+        if (userProfile?.userhandle !== userhandle) {
+          const ifFollow = followerArray.indexOf(userProfile?.userhandle) >= 0;
           setIsCurrUserFoll(ifFollow);
         }
         // console.log('following fetched:', followingCount, 'followers:', followerCount);
@@ -47,9 +48,21 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
       return () => {
         cancelled = true;
       };
-    }, []);
+    }, []); */
 
-    const theJoinedDate = changeFirestoreTime(joinedDate.seconds, joinedDate.nanoseconds);
+    userEffect(() => {
+      const fetchData = async (): Promise<void> => {
+        try {
+          const followingCount = await axios.get(`/user/${pathWoBackslash}/followers_count`);
+          // if (!cancelled) setFollowing(() => followingCount);
+          console.log('followingCount:', followingCount);
+        } catch (err) {
+          console.error(err);
+        }
+        const cancelled = false;
+      };
+    });
+    const theJoinedDate = changeFirestoreTime(joined_date.seconds, joined_date.nanoseconds);
     return (
       <>
         {data?.bgURL ? (
@@ -60,9 +73,9 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
         <div className="flex flex-col px-[15px] pt-[11px]">
           <div className="flex justify-between basis-auto items-start">
             <div className="relative mt-[-15%] mb-[11px] border-white border-4 rounded-full">
-              <Avatar photoURL={photoURL} size={134} />
+              <Avatar profile_pic={profile_pic} size={134} />
             </div>
-            {userProfile?.userHandle === userHandle ? (
+            {userProfile?.userhandle === userhandle ? (
               <button
                 type="button"
                 onClick={handleEditProfile}
@@ -77,7 +90,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
                     className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full group group-hover:border-likesLineHover group-hover:border-solid-[1px]"
                     onClick={(e) => {
                       e.preventDefault();
-                      void unfollow(userProfile?.userHandle, userHandle);
+                      void unfollow(userProfile?.userhandle, userhandle);
                       setIsCurrUserFoll((prev) => !prev);
                     }}
                   >
@@ -92,7 +105,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
                     className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
                     onClick={(e) => {
                       e.preventDefault();
-                      if (userProfile?.userHandle && userHandle) void follow(userProfile?.userHandle, userHandle);
+                      if (userProfile?.userhandle && userhandle) void follow(userProfile?.userhandle, userhandle);
                       setIsCurrUserFoll((prev) => !prev);
                     }}
                   >
@@ -105,8 +118,8 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
             )}
           </div>
           <div className="mt-1 mb-[11px]">
-            <h1 className="font-bold text-[19px] leading-[23px]">{userName}</h1>
-            <span className="text-sm text-greyTxt">@{userHandle}</span>
+            <h1 className="font-bold text-[19px] leading-[23px]">{username}</h1>
+            <span className="text-sm text-greyTxt">@{userhandle}</span>
           </div>
           <div className="mb-[11px] text-sm">
             <span className="">{bio}</span>
@@ -176,19 +189,19 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
   };
 
   function NullProfile(): JSX.Element {
-    const userHandle = pathWoBackslash();
+    const userhandle = pathWoBackslash();
     return (
       <>
         <div className="h-[200px] bg-dark-650" />
         <div className="flex flex-col px-[15px] pt-[11px]">
           <div className="flex justify-between basis-auto items-start">
             <div className="relative mt-[-15%] mb-[11px] border-white border-4 rounded-full">
-              <Avatar photoURL="" size={134} />
+              <Avatar profile_pic="" size={134} />
             </div>
           </div>
           <div className="mt-1 mb-[11px]">
             <h1 className="font-bold text-[19px] leading-[23px]">{}</h1>
-            <span className="text-sm text-greyTxt">@{userHandle}</span>
+            <span className="text-sm text-greyTxt">@{userhandle}</span>
           </div>
         </div>
       </>

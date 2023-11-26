@@ -1,14 +1,14 @@
 export default interface ProfileProps {
-  userHandle?: string;
-  userName?: string;
+  userhandle?: string;
+  username?: string;
   email?: string;
-  photoURL?: string;
+  profile_pic?: string;
   backgroundPic?: string;
   bio?: string;
   birthday?: Date;
   location?: string;
   website?: string;
-  joinedDate?: Date;
+  joined_date?: Date;
   following?: number;
   followers?: number;
   uid?: string;

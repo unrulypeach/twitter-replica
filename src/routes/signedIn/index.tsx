@@ -7,6 +7,7 @@ import Tweet from '../../features/tweet';
 import { useState, useEffect } from 'react';
 import { getHomePosts } from '../../services/firebase/firestore';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
+import axios from '../../api/axios';
 
 export default function SignedInHome(): JSX.Element {
   const [posts, setPosts] = useState<JSX.Element[]>([]);
@@ -15,32 +16,37 @@ export default function SignedInHome(): JSX.Element {
   const { userProfile } = useAuthContext();
   useEffect(() => {
     const postz = async (): Promise<void> => {
-      // const userHandleOrError = userProfile?.userHandle ?? 'ERROR';
-      if (!userProfile?.userHandle) {
+      // const userhandleOrError = userProfile?.userhandle ?? 'ERROR';
+      if (!userProfile?.userhandle) {
         return;
       }
-      const dlPosts = await getHomePosts();
-      const mappedPosts = dlPosts.map((post, i) => {
-        return (
-          <Tweet
-            key={i}
-            id={post.id}
-            userName={post.userName}
-            userHandle={post.userHandle}
-            userPic={post.userPic ?? ''}
-            text={post.content}
-            imgLink={post.photoURL ?? ''}
-            date={post.time}
-            likes={post?.likes}
-            path={post?.path}
-          />
-        );
-      });
-      setPosts(mappedPosts);
-      console.log('home posts fetched');
+      // const dlPosts = await getHomePosts();
+      try {
+        const postRes = await axios.get('/post/homepage');
+        const mappedPosts = postRes.data.map((post) => {
+          return (
+            <Tweet
+              key={post._id}
+              id={post._id}
+              username={post?.username}
+              userhandle={post?.userhandle}
+              userPic={post?.userPic ?? ''}
+              text={post.content}
+              imgLink={post?.profile_pic ?? ''}
+              date={post.date}
+              likes={post?.likes.length}
+              path={post?.path}
+            />
+          );
+        });
+        setPosts(mappedPosts);
+        console.log('home posts fetched:', postRes);
+      } catch (err) {
+        console.error(err);
+      }
     };
     postz().catch(console.error);
-  }, [userProfile?.userHandle, userProfile?.userName, shouldUpdate]);
+  }, [userProfile?.userhandle, userProfile?.username, shouldUpdate]);
 
   return (
     <div className="flex flex-row">

@@ -35,20 +35,20 @@ export default function ProfilePage(): JSX.Element {
   // get user posts
   useEffect(() => {
     setPostLoading(true);
-    if (userData?.userHandle) {
-      const { userHandle, userName } = userData;
+    if (userData?.userhandle) {
+      const { userhandle, username } = userData;
       const postz = async (): Promise<void> => {
-        const dlPosts = await getPosts(userHandle);
+        const dlPosts = await getPosts(userhandle);
         const x = dlPosts.map((post, i) => {
           return (
             <Tweet
               key={i}
               id={post.id}
-              userName={userName}
-              userHandle={userHandle}
+              username={username}
+              userhandle={userhandle}
               userPic={post?.userPic ?? ''}
               text={post.content}
-              imgLink={post.photoURL ?? ''}
+              imgLink={post.profile_pic ?? ''}
               date={post.time}
               likes={post?.likes}
               path={post?.path}

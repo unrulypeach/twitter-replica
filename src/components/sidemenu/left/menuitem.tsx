@@ -9,7 +9,7 @@ export default function MenuItem({ title, iconData, filledIcon }: IconProps): JS
   const { userProfile } = useAuthContext();
 
   if (lcTitle === 'profile') {
-    if (userProfile?.userHandle) lcTitle = userProfile?.userHandle;
+    if (userProfile?.userhandle) lcTitle = userProfile?.userhandle;
   }
 
   function Selected(): JSX.Element {

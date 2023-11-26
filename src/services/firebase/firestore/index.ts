@@ -29,7 +29,7 @@ import { StringFormat, getDownloadURL, ref, uploadBytesResumable } from 'firebas
 export async function getUserProfile(params: string): Promise<DocumentSnapshot<DocumentData>> {
   const userProfileRef = collection(db, 'user-profiles');
 
-  const userQuery = query(userProfileRef, where('userHandle', '==', params));
+  const userQuery = query(userProfileRef, where('userhandle', '==', params));
   const userSnap = await getDocs(userQuery);
   const result = [];
   userSnap.forEach((doc) => {
@@ -58,9 +58,9 @@ export async function getUserFollowing(params: string): Promise<number> {
 }
 
 // TODO: this should eventually become a cloud function and the number should
-// be updated to user-profiles/{userHandle} doc
+// be updated to user-profiles/{userhandle} doc
 export async function getUserFollowers(params: string): Promise<Array<string>> {
-  const userQuery = query(collectionGroup(db, 'following'), where('userHandle', '==', params));
+  const userQuery = query(collectionGroup(db, 'following'), where('userhandle', '==', params));
   const querySnapshot = await getDocs(userQuery);
   const data = [];
   querySnapshot.forEach((doc) => {
@@ -81,13 +81,13 @@ export async function follow(currUser: string, params: string): Promise<void> {
   getDoc(userRef)
     .then((theDoc) => {
       if (theDoc.exists()) {
-        void setDoc(userFollowRef, { userHandle: params, date: today });
+        void setDoc(userFollowRef, { userhandle: params, date: today });
       } else {
         // TODO:
         // - create doc under user
         void setDoc(doc(db, 'follows', currUser), {});
         // - then create follow
-        void setDoc(userFollowRef, { userHandle: params, date: today });
+        void setDoc(userFollowRef, { userhandle: params, date: today });
       }
     })
     .catch((error) => {
@@ -106,7 +106,7 @@ export async function unfollow(currUser: string, forUser: StringFormat): Promise
 
 export async function post(
   currUser: string,
-  userName: string,
+  username: string,
   userPic: string | undefined,
   content: string | undefined,
   photoFile?: File | Array<File>,
@@ -115,32 +115,32 @@ export async function post(
   const userPostsColl = collection(db, `posts/${currUser}/user-posts`);
   const colCount = await getCountFromServer(userPostsColl);
   const seqNum = colCount.data().count;
-  const photoURL = photoFile ? await uploadPostPhoto(currUser, photoFile) : null;
-  const postData = photoURL
+  const profile_pic = photoFile ? await uploadPostPhoto(currUser, photoFile) : null;
+  const postData = profile_pic
     ? userPic
       ? {
-          userHandle: currUser,
-          userName,
+          userhandle: currUser,
+          username,
           userPic,
           time: now,
           content,
           seq: seqNum,
           likes: [],
-          photoURL,
+          profile_pic,
         }
       : {
-          userHandle: currUser,
-          userName,
+          userhandle: currUser,
+          username,
           time: now,
           content,
           seq: seqNum,
           likes: [],
-          photoURL,
+          profile_pic,
         }
     : userPic
     ? {
-        userHandle: currUser,
-        userName,
+        userhandle: currUser,
+        username,
         userPic,
         time: now,
         content,
@@ -148,8 +148,8 @@ export async function post(
         likes: [],
       }
     : {
-        userHandle: currUser,
-        userName,
+        userhandle: currUser,
+        username,
         time: now,
         content,
         seq: seqNum,
@@ -207,8 +207,8 @@ export async function postReply(
   const now = await getFirestoreTime();
   const postRef = collection(db, `posts/${postUser}/user-posts/${postId}/comments`);
   const docRef = await addDoc(postRef, {
-    userHandle: currUserhandle,
-    userName: currUsername,
+    userhandle: currUserhandle,
+    username: currUsername,
     content: reply,
     time: now,
     likes: [],

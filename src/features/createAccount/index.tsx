@@ -217,7 +217,7 @@ export default function CreateAccount(): JSX.Element {
             type="button"
             onClick={() => {
               // const conglomeratedInfo = {
-              //   userName: name,
+              //   username: name,
               //   email,
               //   birthday: new Date(year, month - 1, day),
               // };

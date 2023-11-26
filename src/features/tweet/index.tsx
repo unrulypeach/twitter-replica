@@ -8,8 +8,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 interface TweetProps {
-  userName: string;
-  userHandle: string;
+  username: string;
+  userhandle: string;
   text: string;
   imgLink: string;
   date: Timestamp;
@@ -19,8 +19,8 @@ interface TweetProps {
   userPic: string;
 }
 export default function Tweet({
-  userName,
-  userHandle,
+  username,
+  userhandle,
   text,
   imgLink,
   date,
@@ -36,12 +36,12 @@ export default function Tweet({
   const handleLike = (e) => {
     e.preventDefault();
     if (liked) {
-      void unlikeThisPost(userProfile?.userHandle, path);
+      void unlikeThisPost(userProfile?.userhandle, path);
       setLiked(!liked);
       setLikesCount((prev) => prev - 1);
     }
     if (!liked) {
-      void likeThisPost(userProfile?.userHandle, path);
+      void likeThisPost(userProfile?.userhandle, path);
       setLiked(!liked);
       setLikesCount((prev) => prev + 1);
     }
@@ -49,16 +49,16 @@ export default function Tweet({
 
   useEffect(() => {
     if (likes) {
-      if (likes.includes(userProfile?.userHandle)) setLiked(true);
+      if (likes.includes(userProfile?.userhandle)) setLiked(true);
     }
   }, []);
 
   return (
     <Link
-      to={`/${userHandle}/p/${id}`}
+      to={`/${userhandle}/p/${id}`}
       state={{
-        userName,
-        userHandle,
+        username,
+        userhandle,
         text,
         imgLink,
         date,
@@ -70,18 +70,18 @@ export default function Tweet({
       }}
     >
       <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar hover:bg-tweetHov">
-        <Link to={`/${userHandle}`}>
+        <Link to={`/${userhandle}`}>
           <div className="mr-[11px] hover:shadow-inverse rounded-full">
-            <Avatar photoURL={userPic} />
+            <Avatar profile_pic={userPic} />
           </div>
         </Link>
 
         <div className="flex flex-col justify-center grow ">
           <div className="mb-[2px] flex flex-row justify-between leading-[19px]">
             <div>
-              <Link to={`/${userHandle}`}>
-                <span className="text-[14px] leading-[19px] font-bold hover:underline">{userName} </span>
-                <span className="text-[13px] leading-[19px] text-greyTxt">@{userHandle} ·</span>
+              <Link to={`/${userhandle}`}>
+                <span className="text-[14px] leading-[19px] font-bold hover:underline">{username} </span>
+                <span className="text-[13px] leading-[19px] text-greyTxt">@{userhandle} ·</span>
               </Link>
               <span className="text-[13px] leading-[19px] text-greyTxt"> {convertToTimeSince(date)}</span>
             </div>

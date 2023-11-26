@@ -1,6 +1,6 @@
 import { follow, unfollow } from '../../services/firebase/firestore';
 
-export default function FollowBtn({ currUser, userHandle, status, setStatus }): JSX.Element {
+export default function FollowBtn({ currUser, userhandle, status, setStatus }): JSX.Element {
   // check if following already
   const unfollowBtn = (): JSX.Element => {
     return (
@@ -8,7 +8,7 @@ export default function FollowBtn({ currUser, userHandle, status, setStatus }): 
         className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
         onClick={(e) => {
           e.preventDefault();
-          void unfollow(currUser, userHandle);
+          void unfollow(currUser, userhandle);
           setStatus((prev) => !prev);
         }}
       >
@@ -26,7 +26,7 @@ export default function FollowBtn({ currUser, userHandle, status, setStatus }): 
         className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
         onClick={(e) => {
           e.preventDefault();
-          if (currUser && userHandle) void follow(currUser, userHandle);
+          if (currUser && userhandle) void follow(currUser, userhandle);
           setStatus((prev) => !prev);
         }}
       >

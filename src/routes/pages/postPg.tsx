@@ -12,7 +12,7 @@ export default function PostPg(): JSX.Element {
   const { userProfile } = useAuthContext();
   const location = useLocation();
   // TODO: extract data only if location.state is NOT NULL
-  const { userName, userHandle, text, imgLink, date, likes, id, liked, likesCount, path } = location.state;
+  const { username, userhandle, text, imgLink, date, likes, id, liked, likesCount, path } = location.state;
   const [thisLiked, setThisLiked] = useState(liked);
   // const [thisLikesCount, setThisLikesCount] = useState(likesCount);
   const textareaRef = useRef(null);
@@ -20,19 +20,19 @@ export default function PostPg(): JSX.Element {
 
   const handleLike = (e) => {
     if (thisLiked) {
-      void unlikeThisPost(userProfile?.userHandle, path);
+      void unlikeThisPost(userProfile?.userhandle, path);
       setThisLiked(!thisLiked);
       // setThisLikesCount((prev) => prev - 1);
     }
     if (!thisLiked) {
-      void likeThisPost(userProfile?.userHandle, path);
+      void likeThisPost(userProfile?.userhandle, path);
       setThisLiked(!thisLiked);
       // setThisLikesCount((prev) => prev + 1);
     }
   };
 
   const handleSubmitReply = () => {
-    void postReply(userProfile?.userHandle, userProfile?.userName, userHandle, id, currentValue).then(
+    void postReply(userProfile?.userhandle, userProfile?.username, userhandle, id, currentValue).then(
       setCurrentValue(''),
     );
   };
@@ -48,14 +48,14 @@ export default function PostPg(): JSX.Element {
   useEffect(() => {
     if (id) {
       const replies = async () => {
-        const dlReplies = await getReplies(userHandle, id);
+        const dlReplies = await getReplies(userhandle, id);
         const x = dlReplies.map((post) => {
           return (
             <Tweet
               key={post?.id}
               id={post?.id}
-              userName={post?.userName}
-              userHandle={post?.userHandle}
+              username={post?.username}
+              userhandle={post?.userhandle}
               text={post?.content}
               imgLink={''}
               date={post?.time}
@@ -81,10 +81,10 @@ export default function PostPg(): JSX.Element {
         </div>
         {/* USER INFO */}
         <div className="flex pb-[4px] mt-[11px] mb-[4px] px-[15px]">
-          <Avatar photoURL={userProfile?.photoURL} />
+          <Avatar profile_pic={userProfile?.profile_pic} />
           <div className="grow pl-3">
-            <h1 className="font-bold text-[14px] leading-[19px]">{userName}</h1>
-            <h2 className="text-dark-500 text-[14px] leading-[19px]">@{userHandle}</h2>
+            <h1 className="font-bold text-[14px] leading-[19px]">{username}</h1>
+            <h2 className="text-dark-500 text-[14px] leading-[19px]">@{userhandle}</h2>
           </div>
         </div>
         {/* POST CONTENT */}
@@ -127,7 +127,7 @@ export default function PostPg(): JSX.Element {
         {/* ADD REPLY */}
         <div className="px-[15px] flex items-center py-[14px] border-b-[1px] border-searchbar">
           <div className="mr-[11px]">
-            <Avatar photoURL={userProfile?.photoURL} />
+            <Avatar profile_pic={userProfile?.profile_pic} />
           </div>
           <label className="grow py-[11px]">
             <textarea

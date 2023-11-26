@@ -32,11 +32,11 @@ const router = createBrowserRouter([
       { path: 'messages', element: <MessagesPage /> },
       { path: 'bookmarks', element: <BookmarksPage /> },
       {
-        path: ':userHandle',
+        path: ':userhandle',
         element: <ProfilePage />,
       },
       {
-        path: ':userHandle/p/:postId',
+        path: ':userhandle/p/:postId',
         element: <PostPg />,
       },
     ],

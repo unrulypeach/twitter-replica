@@ -5,5 +5,5 @@ import { useAuthContext } from '../../contexts/authContext';
 export default function LSideMenu(): JSX.Element {
   const { currentUser } = useAuthContext();
 
-  return <>{currentUser.uid ? <SignedInLSideMenu /> : <SignedOutLSideMenu />}</>;
+  return <>{currentUser.token ? <SignedInLSideMenu /> : <SignedOutLSideMenu />}</>;
 }

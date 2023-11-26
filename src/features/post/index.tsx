@@ -29,9 +29,9 @@ export default function Post({ setShouldUpdate }): JSX.Element {
   }, [imgFile]);
 
   const handlePost = () => {
-    if (userProfile?.userHandle) {
+    if (userProfile?.userhandle) {
       if (imgFile)
-        void post(userProfile?.userHandle, userProfile?.userName, userProfile?.photoURL, postValue, imgFile).then(
+        void post(userProfile?.userhandle, userProfile?.username, userProfile?.profile_pic, postValue, imgFile).then(
           () => {
             setPostValue('');
             setImgFile(undefined);
@@ -39,7 +39,7 @@ export default function Post({ setShouldUpdate }): JSX.Element {
             setShouldUpdate((prev) => !prev);
           },
         );
-      void post(userProfile?.userHandle, userProfile?.userName, userProfile?.photoURL, postValue).then(() => {
+      void post(userProfile?.userhandle, userProfile?.username, userProfile?.profile_pic, postValue).then(() => {
         setPostValue('');
         setImgFile(undefined);
         setPreviewImg(undefined);
@@ -52,7 +52,7 @@ export default function Post({ setShouldUpdate }): JSX.Element {
   return (
     <div className="flex flex-row w-[598px] border-b-[1px] border-searchbar py-1 px-[15px]">
       <div className="pt-1 mr-[11px]">
-        <Avatar photoURL={userProfile?.photoURL} />
+        <Avatar profile_pic={userProfile?.profile_pic} />
       </div>
       <div className="grow">
         <div className="flex flex-col">

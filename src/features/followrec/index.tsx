@@ -4,13 +4,13 @@ import ProfileMiniFollow from '../../components/user/profileMiniFollow';
 
 export default function WhoToFollow({ suggestions }: WhoToFollowProps): JSX.Element {
   // const [userDataState, setUserDataState] = useState({
-  //   userName: "",
-  //   userHandle: "",
+  //   username: "",
+  //   userhandle: "",
   // });
 
   // useEffect(() => {
   //   async function getUser(): Promise<void> {
-  //     const user = await getUserProfile(userHandle);
+  //     const user = await getUserProfile(userhandle);
   //     const userData = user.data();
   //     console.log(userData);
   //     if (!cancelled) {
@@ -33,9 +33,9 @@ export default function WhoToFollow({ suggestions }: WhoToFollowProps): JSX.Elem
       {suggestions?.map((x) => (
         <ProfileMiniFollow
           key={uniqid()}
-          userName={x.userName}
-          userHandle={x.userHandle}
-          // photoURL={x.photoURL}
+          username={x.username}
+          userhandle={x.userhandle}
+          // profile_pic={x.profile_pic}
         />
       ))}
       <div>

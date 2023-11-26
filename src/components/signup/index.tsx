@@ -12,7 +12,7 @@ export default function SignupPopup(): JSX.Element {
     switch (signupPage) {
       case 0:
         return <SignupModal />;
-      case 1: // set userName, birthdate, email
+      case 1: // set username, birthdate, email
         return <CreateAccount />;
       case 2:
         return <CreatePw />;

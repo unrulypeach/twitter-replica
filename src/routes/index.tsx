@@ -35,8 +35,8 @@ export default function HomePg(): JSX.Element {
             setNewUserData,
           }}
         >
-          {currentUser?.uid ? <SignedInHome /> : <SignedOutHome />}
-          {currentUser?.uid ? <></> : <SignInFooter />}
+          {currentUser?.token ? <SignedInHome /> : <SignedOutHome />}
+          {currentUser?.token ? <></> : <SignInFooter />}
           <Outlet />
         </NEW_USER_CONTEXT.Provider>
       </LOGIN_PAGE_CONTEXT.Provider>

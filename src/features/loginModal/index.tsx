@@ -1,8 +1,8 @@
-import CloseModal from "../signupModal/closeModal";
-import { twitterBirdBlue } from "../../styles/assets/icons/iconData";
-import SignupGoogleBtn from "../signup/signupGoogleBtn";
-import SignupAppleBtn from "../signup/signupAppleBtn";
-import LoginSection from "./loginSection";
+import CloseModal from '../signupModal/closeModal';
+import { twitterBirdBlue } from '../../styles/assets/icons/iconData';
+import SignupGoogleBtn from '../signup/signupGoogleBtn';
+import SignupAppleBtn from '../signup/signupAppleBtn';
+import LoginSection from './loginSection';
 
 export default function LoginModal(): JSX.Element {
   return (
@@ -17,9 +17,7 @@ export default function LoginModal(): JSX.Element {
       </div>
 
       <div className="my-[19px]">
-        <span className="text-[29px] leading-[34px] font-bold">
-          Sign in to Twitter
-        </span>
+        <span className="text-[29px] leading-[34px] font-bold">Sign in to Twitter</span>
       </div>
 
       <div className="flex flex-col px-[30px] max-w-[364px] min-w-[364px] m-auto">

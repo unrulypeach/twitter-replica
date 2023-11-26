@@ -12,8 +12,8 @@ interface IEditProfile {
 }
 export default function EditProfile({ showModal, setShowModal, data, setUserInfo }: IEditProfile): JSX.Element {
   const { editUserProfile, uploadUserPhoto, uploadBgPhoto, userProfile, setUserProfile } = useAuthContext();
-  const { bio, location, website, userName, userHandle, photoURL } = data;
-  const [name, setName] = useState(userName ?? '');
+  const { bio, location, website, username, userhandle, profile_pic } = data;
+  const [name, setName] = useState(username ?? '');
   const [bioState, setBioState] = useState(bio ?? '');
   const [locationState, setLocationState] = useState(location ?? '');
   const [websiteState, setWebsiteState] = useState(website ?? '');
@@ -25,21 +25,21 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
   const handleSave = async () => {
     const newEdit = {
       bio: bioState,
-      userName: name,
+      username: name,
       location: locationState,
       website: websiteState,
     };
     let userPic;
     if (imgFile) userPic = await uploadUserPhoto(imgFile);
     setUserProfile((prev) => {
-      return { ...prev, photoURL: userPic };
+      return { ...prev, profile_pic: userPic };
     });
     if (bgImgFile) void uploadBgPhoto(bgImgFile);
     void editUserProfile(userProfile?.uid, newEdit);
   };
 
   const handleClosePg = () => {
-    setName(userName ?? '');
+    setName(username ?? '');
     setBioState(bio ?? '');
     setLocationState(location ?? '');
     setWebsiteState(website ?? '');
@@ -49,7 +49,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
 
   useEffect(() => {
     if (!imgFile) {
-      setProfPicState(photoURL ?? '');
+      setProfPicState(profile_pic ?? '');
       return;
     }
     const objectUrl = URL.createObjectURL(imgFile);
@@ -136,7 +136,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
                 </div>
                 <div className="flex justify-between basis-auto items-start">
                   <div className="flex items-center ml-[14px] relative mt-[-5%] mb-[11px] border-white border-2 rounded-full">
-                    <Avatar photoURL={profPicState} size={104} />
+                    <Avatar profile_pic={profPicState} size={104} />
                     {/* <div className="hover:cursor-pointer absolute right-[31.5px] p-[10px] bg-imgBg hover:bg-imgHov rounded-full fill-white"> */}
                     <div className="bg-imgBg hover:bg-imgHov absolute right-[31.5px] rounded-full h-[41px] w-[41px]">
                       <label
