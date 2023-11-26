@@ -4,23 +4,28 @@ import { useContext, useState } from 'react';
 import { useAuthContext } from '../../contexts/authContext';
 import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
 import { Link } from 'react-router-dom';
+import axios from '../../api/axios';
 
 export default function EnterPw(): JSX.Element {
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
   const [pw, setPw] = useState('');
   const [showPw, setShowPw] = useState(false);
-  const { login, userProfile } = useAuthContext();
+  const { setCurrentUser, setUserProfile, userProfile } = useAuthContext();
 
   async function handleNext(): Promise<void> {
-    if (login && userProfile?.email)
-      await login(userProfile.email, pw).then(
-        () => {
-          if (setLoginPage) setLoginPage(0);
-        },
-        (error) => {
-          console.log(error);
-        },
-      );
+    if (userProfile?.email && pw) {
+      try {
+        const res = await axios.post('/login', {
+          email: userProfile.email,
+          password: pw,
+        });
+        setUserProfile(res.data.user);
+        const { user, ...token } = res.data;
+        setCurrentUser(token);
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 
   return (
