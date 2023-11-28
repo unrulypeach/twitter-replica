@@ -53,9 +53,9 @@ export const showTime = (date: Timestamp): JSX.Element => {
   );
 };
 
-export const convertToTimeSince = (date: Timestamp): JSX.Element => {
+export const convertToTimeSince = (date: string): JSX.Element => {
   const currTime = new Date();
-  const inputDate = changeFirestoreTime(date.seconds, date.nanoseconds);
+  const inputDate = new Date(date);
   // in milliseconds
   const timeSince = currTime.valueOf() - inputDate.valueOf();
   const yearDiff = currTime.getFullYear() - inputDate.getFullYear();

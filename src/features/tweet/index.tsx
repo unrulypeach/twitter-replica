@@ -1,4 +1,3 @@
-import { type Timestamp } from 'firebase/firestore';
 import Avatar from '../../components/user/avatar';
 import { convertToTimeSince } from '../../scripts/utils';
 import { reply, retweet, like, views, share, moreNoBorder, likeFilled } from '../../styles/assets/icons/iconData';
@@ -6,36 +5,28 @@ import { likeThisPost, unlikeThisPost } from '../../services/firebase/firestore'
 import { useAuthContext } from '../../contexts/authContext';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import TweetProps from '../../types/tweetProps';
 
-interface TweetProps {
-  username: string;
-  userhandle: string;
-  text: string;
-  imgLink: string;
-  date: Timestamp;
-  likes: Array<string>;
-  id: string;
-  path: string;
-  userPic: string;
-}
 export default function Tweet({
-  username,
+  uid,
+  /* username,
   userhandle,
-  text,
-  imgLink,
+  profile_pic, */
+  /* imgLink,
+  path, */
+  content,
+  comments,
   date,
   likes,
-  id,
-  path,
-  userPic,
+  _id,
 }: TweetProps): JSX.Element {
   const { userProfile } = useAuthContext();
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(likes.length);
-
-  const handleLike = (e) => {
+  const { username, userhandle, profile_pic } = uid;
+  const handleLike = (e: Event) => {
     e.preventDefault();
-    if (liked) {
+    /* if (liked) {
       void unlikeThisPost(userProfile?.userhandle, path);
       setLiked(!liked);
       setLikesCount((prev) => prev - 1);
@@ -44,35 +35,36 @@ export default function Tweet({
       void likeThisPost(userProfile?.userhandle, path);
       setLiked(!liked);
       setLikesCount((prev) => prev + 1);
-    }
+    } */
   };
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (likes) {
       if (likes.includes(userProfile?.userhandle)) setLiked(true);
     }
-  }, []);
+  }, []); */
 
   return (
     <Link
-      to={`/${userhandle}/p/${id}`}
+      to={`/${userhandle}/p/${_id}`}
       state={{
-        username,
-        userhandle,
-        text,
-        imgLink,
+        uid,
+        /* username,
+        userhandle, */
+        content,
+        // imgLink,
         date,
         likes,
-        id,
+        _id,
         liked,
         likesCount,
-        path,
+        // path,
       }}
     >
       <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar hover:bg-tweetHov">
         <Link to={`/${userhandle}`}>
           <div className="mr-[11px] hover:shadow-inverse rounded-full">
-            <Avatar profile_pic={userPic} />
+            <Avatar profile_pic={profile_pic} />
           </div>
         </Link>
 
@@ -92,9 +84,9 @@ export default function Tweet({
             <div>
               <div>
                 <div>
-                  <span>{text} </span>
+                  <span>{content} </span>
                 </div>
-                <div>
+                {/* <div>
                   {imgLink ? (
                     <img
                       className="border-searchbar border-solid-[1px] rounded-2xl mt-[11px] h-[510px] w-[408px]"
@@ -104,16 +96,19 @@ export default function Tweet({
                   ) : (
                     <></>
                   )}
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
 
           <div className="mt-[11px] flex flex-row justify-between max-w-[510px]">
-            <div className="fill-dark-500 cursor-pointer group">
+            <div className="flex fill-dark-500 cursor-pointer group">
               <div className="rounded-full p-[8px] group-hover:bg-blueHover group-hover:fill-blueLineHover">
                 {reply}
               </div>
+              <span className="text-[12px] leading-[15px] px-[8px] pt-[8px] group-hover:text-blueLineHover">
+                {comments.length}
+              </span>
             </div>
             <div className="fill-dark-500 cursor-pointer group">
               <div className="rounded-full p-[8px] group-hover:bg-retweetHover group-hover:fill-retweetLineHover">
@@ -124,16 +119,14 @@ export default function Tweet({
               {liked ? (
                 <div className="flex">
                   <div className="rounded-full p-[8px] group-hover:bg-likesHover fill-likesLineHover">{likeFilled}</div>
-                  <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] text-likesLineHover">
-                    {likesCount}
-                  </span>
+                  <span className="text-[12px] leading-[15px] px-[8px] pt-[8px] text-likesLineHover">{likesCount}</span>
                 </div>
               ) : (
                 <div className="flex fill-dark-500">
                   <div className="rounded-full p-[8px] group-hover:bg-likesHover group-hover:fill-likesLineHover">
                     {like}
                   </div>
-                  <span className="text-[12px] leading-[15px] px-[11px] pt-[8px] group-hover:text-likesLineHover">
+                  <span className="text-[12px] leading-[15px] px-[8px] pt-[8px] group-hover:text-likesLineHover">
                     {likesCount}
                   </span>
                 </div>

@@ -14,7 +14,7 @@ export default function HomePg(): JSX.Element {
   const [signupPage, setSignupPage] = useState(0);
   const [loginPage, setLoginPage] = useState(0);
   const [newUserData, setNewUserData] = useState<InewUser>(newUserDefault);
-  const { currentUser } = useAuthContext();
+  const { userProfile } = useAuthContext();
 
   return (
     <SIGNUP_PAGE_CONTEXT.Provider
@@ -35,8 +35,8 @@ export default function HomePg(): JSX.Element {
             setNewUserData,
           }}
         >
-          {currentUser?.token ? <SignedInHome /> : <SignedOutHome />}
-          {currentUser?.token ? <></> : <SignInFooter />}
+          {userProfile?._id ? <SignedInHome /> : <SignedOutHome />}
+          {userProfile?._id ? <></> : <SignInFooter />}
           <Outlet />
         </NEW_USER_CONTEXT.Provider>
       </LOGIN_PAGE_CONTEXT.Provider>

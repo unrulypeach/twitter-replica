@@ -6,7 +6,7 @@ import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu
 import { useAuthContext } from '../../contexts/authContext';
 
 export default function ExplorePage(): JSX.Element {
-  const { currentUser } = useAuthContext();
+  const { userProfile } = useAuthContext();
   return (
     <div className="flex flex-row ">
       <div className="flex flex-col w-[600px] border-r-[1px] border-r-searchbar">
@@ -25,7 +25,7 @@ export default function ExplorePage(): JSX.Element {
         </div>
       </div>
 
-      <div>{currentUser?.token ? <SignedInRSideMenu path="explore" /> : <SignedOutRSideMenu />}</div>
+      <div>{userProfile?._id ? <SignedInRSideMenu path="explore" /> : <SignedOutRSideMenu />}</div>
     </div>
   );
 }

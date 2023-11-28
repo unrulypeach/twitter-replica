@@ -4,6 +4,7 @@ import { useContext, useState } from 'react';
 import { useAuthContext } from '../../contexts/authContext';
 import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
 import { Link } from 'react-router-dom';
+import { useCookies } from 'react-cookie';
 import axios from '../../api/axios';
 
 export default function EnterPw(): JSX.Element {
@@ -11,6 +12,7 @@ export default function EnterPw(): JSX.Element {
   const [pw, setPw] = useState('');
   const [showPw, setShowPw] = useState(false);
   const { setCurrentUser, setUserProfile, userProfile } = useAuthContext();
+  const [cookies, setCookies] = useCookies(['token']);
 
   async function handleNext(): Promise<void> {
     if (userProfile?.email && pw) {
@@ -21,7 +23,8 @@ export default function EnterPw(): JSX.Element {
         });
         setUserProfile(res.data.user);
         const { user, ...token } = res.data;
-        setCurrentUser(token);
+        // setCurrentUser(token);
+        setCookies('token', token, { sameSite: 'none', secure: true });
       } catch (err) {
         console.error(err);
       }

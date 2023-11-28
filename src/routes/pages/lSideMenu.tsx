@@ -3,7 +3,7 @@ import SignedOutLSideMenu from '../../components/sidemenu/left/signedOutLSideMen
 import { useAuthContext } from '../../contexts/authContext';
 
 export default function LSideMenu(): JSX.Element {
-  const { currentUser } = useAuthContext();
+  const { userProfile } = useAuthContext();
 
-  return <>{currentUser.token ? <SignedInLSideMenu /> : <SignedOutLSideMenu />}</>;
+  return <>{userProfile?._id ? <SignedInLSideMenu /> : <SignedOutLSideMenu />}</>;
 }

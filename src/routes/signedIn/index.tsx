@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import { getHomePosts } from '../../services/firebase/firestore';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
 import axios from '../../api/axios';
+import TweetProps from '../../types/tweetProps';
 
 export default function SignedInHome(): JSX.Element {
   const [posts, setPosts] = useState<JSX.Element[]>([]);
@@ -22,20 +23,22 @@ export default function SignedInHome(): JSX.Element {
       }
       // const dlPosts = await getHomePosts();
       try {
-        const postRes = await axios.get('/post/homepage');
-        const mappedPosts = postRes.data.map((post) => {
+        const postRes = await axios.get<TweetProps[]>('/post/homepage');
+        const mappedPosts: Array<JSX.Element> = postRes.data.map((post: TweetProps) => {
           return (
             <Tweet
               key={post._id}
-              id={post._id}
-              username={post?.username}
-              userhandle={post?.userhandle}
-              userPic={post?.userPic ?? ''}
-              text={post.content}
-              imgLink={post?.profile_pic ?? ''}
+              _id={post._id}
+              uid={post.uid}
+              content={post.content}
+              /* username={post?.uid.username}
+              userhandle={post?.uid.userhandle}
+              userPic={post?.userPic ?? ''} */
+              // imgLink={post?.profile_pic ?? ''}
+              // path={post?.path}
               date={post.date}
-              likes={post?.likes.length}
-              path={post?.path}
+              likes={post?.likes}
+              comments={post?.comments}
             />
           );
         });
