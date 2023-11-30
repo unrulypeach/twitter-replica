@@ -1,5 +1,5 @@
 import CloseModal from '../signupModal/closeModal';
-import { hidePw, viewPw } from '../../styles/assets/icons/iconData';
+import { hidePassword, viewPassword } from '../../styles/assets/icons/iconData';
 import { useContext, useState } from 'react';
 import { useAuthContext } from '../../contexts/authContext';
 import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
@@ -8,26 +8,28 @@ import { useCookies } from 'react-cookie';
 import axios from '../../api/axios';
 import { jwtDecode } from 'jwt-decode';
 
-export default function EnterPw(): JSX.Element {
+export default function EnterPassword(): JSX.Element {
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
-  const [pw, setPw] = useState('');
-  const [showPw, setShowPw] = useState(false);
-  const { setCurrentUser, setUserProfile, userProfile } = useAuthContext();
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const { setUserProfile, userProfile, setCurrentUser } = useAuthContext();
   const [cookies, setCookies] = useCookies(['token']);
 
   async function handleNext(): Promise<void> {
-    if (userProfile?.email && pw) {
+    if (userProfile?.email && password) {
       try {
         const res = await axios.post('/login', {
           email: userProfile.email,
-          password: pw,
+          password,
         });
         // setUserProfile(res.data.user);
         const { access_token } = res.data;
         // setCurrentUser(token);
         setCookies('token', access_token, { sameSite: 'none', secure: true });
         const decodedToken = jwtDecode(access_token);
-        setUserProfile(decodedToken.user);
+        const { user, ...decodedTokenData } = decodedToken;
+        setUserProfile(user);
+        setCurrentUser(decodedTokenData);
         setLoginPage(0);
       } catch (err) {
         console.error(err);
@@ -59,7 +61,7 @@ export default function EnterPw(): JSX.Element {
               >
                 <label className="">
                   <div className="flex flex-row absolute w-[438px]">
-                    {pw.length > 0 ? (
+                    {password.length > 0 ? (
                       <div className="input-name-text-signup">
                         <span>Password</span>
                       </div>
@@ -71,21 +73,21 @@ export default function EnterPw(): JSX.Element {
                   </div>
                   <div className="label-signup flex flex-row">
                     <input
-                      type={showPw ? 'text' : 'password'}
+                      type={showPassword ? 'text' : 'password'}
                       className="input-signup"
                       placeholder=" "
                       required
                       onChange={(e) => {
-                        setPw(e.target.value);
+                        setPassword(e.target.value);
                       }}
                     />
                     <span
                       className="ml-[4px]"
                       onClick={() => {
-                        setShowPw(!showPw);
+                        setShowPassword(!showPassword);
                       }}
                     >
-                      {showPw ? hidePw : viewPw}
+                      {showPassword ? hidePassword : viewPassword}
                     </span>
                   </div>
                 </label>
