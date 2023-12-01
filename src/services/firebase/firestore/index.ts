@@ -185,18 +185,6 @@ export async function getPosts(currUser: string, quantity?: number): Promise<any
 // TODO: fetch more posts
 // export async function getMorePosts(){};
 
-export async function getHomePosts() {
-  const postColl = collectionGroup(db, 'user-posts');
-  const quer = query(postColl, orderBy('time'), limit(10));
-
-  const querSnap = await getDocs(quer);
-  const posts = [];
-  querSnap.forEach((doc) => {
-    posts.push({ id: doc.id, path: doc.ref.path, ...doc.data() });
-  });
-  return posts;
-}
-
 export async function postReply(
   currUserhandle: string,
   currUsername: string,

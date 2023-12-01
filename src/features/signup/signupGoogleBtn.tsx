@@ -15,12 +15,6 @@ export default function SignupGoogleBtn(): JSX.Element {
         className="btn-signup"
         onClick={async () => {
           await loginWithGooglePopup().then(async (result) => {
-            /* user = {
-                displayName, email, uid
-              } */
-
-            // if user in db => fetchUser
-            // else => createUser
             const user: User = result.user;
             await getUserProfileByUid(user.uid)
               .then(() => {
