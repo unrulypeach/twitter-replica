@@ -1,17 +1,15 @@
 import Avatar from '../../components/user/avatar';
 import { convertToTimeSince } from '../../scripts/utils';
 import { reply, retweet, like, views, share, moreNoBorder, likeFilled } from '../../styles/assets/icons/iconData';
-import { likeThisPost, unlikeThisPost } from '../../services/firebase/firestore';
 import { useAuthContext } from '../../contexts/authContext';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import TweetProps from '../../types/tweetProps';
+import type { TweetProps } from '../../types/tweetProps';
+import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
+import { AxiosError } from 'axios';
 
 export default function Tweet({
   uid,
-  /* username,
-  userhandle,
-  profile_pic, */
   /* imgLink,
   path, */
   content,
@@ -20,37 +18,63 @@ export default function Tweet({
   likes,
   _id,
 }: TweetProps): JSX.Element {
+  const axiosPrivate = useAxiosPrivate();
   const { userProfile } = useAuthContext();
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(likes.length);
   const { username, userhandle, profile_pic } = uid;
   const handleLike = (e: Event) => {
     e.preventDefault();
-    /* if (liked) {
-      void unlikeThisPost(userProfile?.userhandle, path);
-      setLiked(!liked);
-      setLikesCount((prev) => prev - 1);
-    }
     if (!liked) {
-      void likeThisPost(userProfile?.userhandle, path);
-      setLiked(!liked);
-      setLikesCount((prev) => prev + 1);
-    } */
+      axiosPrivate
+        .post('/post/like', {
+          postid: _id,
+        })
+        .then(() => {
+          setLiked(!liked);
+          setLikesCount((prev) => prev + 1);
+        })
+        .catch((error) => {
+          if (error instanceof AxiosError) {
+            if (error.response) {
+              console.error(error.response.data);
+              console.error(error.response.status);
+            }
+          }
+        });
+    }
+    if (liked) {
+      axiosPrivate
+        .delete('/post/like', {
+          data: { postid: _id },
+        })
+        .then(() => {
+          setLiked(!liked);
+          setLikesCount((prev) => prev - 1);
+        })
+        .catch((error) => {
+          if (error instanceof AxiosError) {
+            if (error.response) {
+              console.error(error.response.data);
+              console.error(error.response.status);
+            }
+          }
+        });
+    }
   };
 
-  /* useEffect(() => {
+  // see if userProfile._id is in likes array
+  useEffect(() => {
     if (likes) {
-      if (likes.includes(userProfile?.userhandle)) setLiked(true);
+      if (likes.includes(userProfile?._id)) setLiked(true);
     }
-  }, []); */
+  }, []);
 
   return (
     <Link
       to={`/${userhandle}/p/${_id}`}
       state={{
         uid,
-        /* username,
-        userhandle, */
         content,
         // imgLink,
         date,
@@ -86,7 +110,7 @@ export default function Tweet({
                 <div>
                   <span>{content} </span>
                 </div>
-                {/* <div>
+                {/* TODO: <div>
                   {imgLink ? (
                     <img
                       className="border-searchbar border-solid-[1px] rounded-2xl mt-[11px] h-[510px] w-[408px]"
