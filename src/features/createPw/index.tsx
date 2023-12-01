@@ -3,8 +3,7 @@ import { SIGNUP_PAGE_CONTEXT, NEW_USER_CONTEXT } from '../../contexts/userContex
 import CloseModal from '../signupModal/closeModal';
 import { hidePassword, viewPassword } from '../../styles/assets/icons/iconData';
 import { useAuthContext } from '../../contexts/authContext';
-import axios from '../../api/axios';
-import { useCookies } from 'react-cookie';
+import { axiosPrivate } from '../../api/axios';
 import { jwtDecode } from 'jwt-decode';
 
 export default function CreatePassword(): JSX.Element {
@@ -14,24 +13,22 @@ export default function CreatePassword(): JSX.Element {
   const { name, email, birthdate } = newUserData;
   const { signupPage, setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
   const { setUserProfile, setCurrentUser } = useAuthContext();
-  const [cookies, setCookies] = useCookies(['token']);
 
   async function handleSubmit(e: Event): Promise<void> {
     e.preventDefault();
 
     try {
-      const res = await axios.post('/signup', {
+      const res = await axiosPrivate.post('/signup', {
         name,
         email,
         birthdate,
         password,
       });
       const { access_token } = res.data;
-      setCookies('token', access_token, { sameSite: 'none', secure: true });
       const decodedToken = jwtDecode(access_token);
-      const { user, ...decodedTokenData } = decodedToken;
+      const { user } = decodedToken;
       setUserProfile(user);
-      setCurrentUser(decodedTokenData);
+      setCurrentUser(access_token);
       if (setSignupPage) setSignupPage(Number(signupPage) + 1);
     } catch (err) {
       console.error(err);

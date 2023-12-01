@@ -4,8 +4,7 @@ import { useContext, useState } from 'react';
 import { useAuthContext } from '../../contexts/authContext';
 import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
 import { Link } from 'react-router-dom';
-import { useCookies } from 'react-cookie';
-import axios from '../../api/axios';
+import { axiosPrivate } from '../../api/axios';
 import { jwtDecode } from 'jwt-decode';
 
 export default function EnterPassword(): JSX.Element {
@@ -13,23 +12,21 @@ export default function EnterPassword(): JSX.Element {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const { setUserProfile, userProfile, setCurrentUser } = useAuthContext();
-  const [cookies, setCookies] = useCookies(['token']);
+  // const [cookies, setCookies] = useCookies(['token']);
 
   async function handleNext(): Promise<void> {
     if (userProfile?.email && password) {
       try {
-        const res = await axios.post('/login', {
+        const res = await axiosPrivate.post('/login', {
           email: userProfile.email,
           password,
         });
-        // setUserProfile(res.data.user);
         const { access_token } = res.data;
-        // setCurrentUser(token);
-        setCookies('token', access_token, { sameSite: 'none', secure: true });
+        // setCookies('token', access_token, { sameSite: 'none', secure: true });
         const decodedToken = jwtDecode(access_token);
-        const { user, ...decodedTokenData } = decodedToken;
+        const { user } = decodedToken;
         setUserProfile(user);
-        setCurrentUser(decodedTokenData);
+        setCurrentUser(access_token);
         setLoginPage(0);
       } catch (err) {
         console.error(err);
