@@ -60,20 +60,7 @@ export default function Tweet({
   }, []);
 
   return (
-    <Link
-      to={`/${userhandle}/p/${_id}`}
-      state={{
-        uid,
-        content,
-        // imgLink,
-        date,
-        likes,
-        _id,
-        liked,
-        likesCount,
-        // path,
-      }}
-    >
+    <Link to={`/${userhandle}/p/${_id}`}>
       <div className="flex flex-row px-[15px] pt-[11px] pb-[6px] border-b border-searchbar hover:bg-tweetHov">
         <Link to={`/${userhandle}`}>
           <div className="mr-[11px] hover:shadow-inverse rounded-full">
