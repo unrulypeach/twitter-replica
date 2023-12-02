@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { TweetProps } from '../../types/tweetProps';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
-import { AxiosError } from 'axios';
+import { handleAxiosError } from '../../scripts/errorHandling';
 
 export default function Tweet({
   uid,
@@ -35,12 +35,7 @@ export default function Tweet({
           setLikesCount((prev) => prev + 1);
         })
         .catch((error) => {
-          if (error instanceof AxiosError) {
-            if (error.response) {
-              console.error(error.response.data);
-              console.error(error.response.status);
-            }
-          }
+          handleAxiosError(error);
         });
     }
     if (liked) {
@@ -53,20 +48,14 @@ export default function Tweet({
           setLikesCount((prev) => prev - 1);
         })
         .catch((error) => {
-          if (error instanceof AxiosError) {
-            if (error.response) {
-              console.error(error.response.data);
-              console.error(error.response.status);
-            }
-          }
+          handleAxiosError(error);
         });
     }
   };
 
-  // see if userProfile._id is in likes array
   useEffect(() => {
     if (likes) {
-      if (likes.includes(userProfile?._id)) setLiked(true);
+      if (likes.includes(userProfile._id)) setLiked(true);
     }
   }, []);
 
