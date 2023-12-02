@@ -1,4 +1,7 @@
+import { Types } from 'mongoose';
+
 export default interface UserProps {
+  _id: Types.ObjectId;
   username: string;
   userhandle: string;
   birthdate: Date;
