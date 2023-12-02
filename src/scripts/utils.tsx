@@ -1,11 +1,16 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { type Timestamp } from 'firebase/firestore';
-import { useLocation } from 'react-router-dom';
+import { Location, useLocation } from 'react-router-dom';
 import { changeFirestoreTime } from '../services/firebase/firestore';
 
 export const pathWoBackslash = (): string => {
   const location = useLocation().pathname;
   return location.substring(1).charAt(0).toUpperCase() + location.slice(2);
+};
+
+export const lastParam = (location: Location): string => {
+  const n = location.pathname.lastIndexOf('/');
+  return location.pathname.substring(n + 1);
 };
 
 export const showMonthAndYear = (date: Date): JSX.Element => {
@@ -24,8 +29,8 @@ export const showMonthAndDay = (date: Date): JSX.Element => {
   );
 };
 
-export const showMonthDayAndYear = (date: Timestamp): JSX.Element => {
-  const inputDate = changeFirestoreTime(date.seconds, date.nanoseconds);
+export const showMonthDayAndYear = (date: string): JSX.Element => {
+  const inputDate = new Date(date);
   return (
     <>
       {inputDate.toLocaleString('default', { month: 'short' })} {inputDate.getDate()}, {inputDate.getFullYear()}
@@ -33,10 +38,10 @@ export const showMonthDayAndYear = (date: Timestamp): JSX.Element => {
   );
 };
 
-export const showTime = (date: Timestamp): JSX.Element => {
-  const inputDate = changeFirestoreTime(date.seconds, date.nanoseconds);
+export const showTime = (date: string): JSX.Element => {
+  const inputDate = new Date(date);
   const hours = inputDate.getHours();
-  const getHours = (hr) => {
+  const getHours = (hr: number) => {
     if (hr <= 12) {
       return hr;
     }
