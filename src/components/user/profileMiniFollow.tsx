@@ -1,12 +1,10 @@
 /* eslint-disable @typescript-eslint/restrict-plus-operands */
 import Avatar from './avatar';
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '../../contexts/authContext';
 import FollowBtn from '../../features/followBtn';
 import type { ShortUserProps } from '../../types/tweetProps';
 
-export default function ProfileMiniFollow({ username, userhandle, profile_pic }: ShortUserProps): JSX.Element {
-  const { userProfile } = useAuthContext();
+export default function ProfileMiniFollow({ _id, username, userhandle, profile_pic }: ShortUserProps): JSX.Element {
   return (
     <>
       <Link to={'/' + userhandle}>
@@ -16,7 +14,7 @@ export default function ProfileMiniFollow({ username, userhandle, profile_pic }:
             <h1 className="font-bold text-[14px] leading-[19px]">{username ?? 'Default Default'}</h1>
             <h2 className="text-dark-500 text-[14px] leading-[19px]">{'@' + (userhandle ?? 'default')}</h2>
           </div>
-          <FollowBtn currUser={userProfile?.userhandle} userhandle={userhandle} />
+          <FollowBtn uid={_id} />
         </div>
       </Link>
     </>

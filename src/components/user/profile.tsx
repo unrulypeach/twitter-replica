@@ -1,20 +1,14 @@
 import Avatar from './avatar';
 import { useAuthContext } from '../../contexts/authContext';
 import { pathWoBackslash, showMonthAndYear } from '../../scripts/utils';
-import { type DocumentSnapshot, type DocumentData } from 'firebase/firestore';
-import {
-  changeFirestoreTime,
-  getUserFollowers,
-  getUserFollowing,
-  follow,
-  unfollow,
-} from '../../services/firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import EditProfile from '../../features/editProfile';
 import axios from '../../api/axios';
+import type UserProps from '../../types/userProps';
+import FollowBtn from '../../features/followBtn';
 interface IProfile {
-  data: DocumentSnapshot<DocumentData | undefined>;
-  setData: React.Dispatch<React.SetStateAction<DocumentData | null>>;
+  data: UserProps;
+  setData: React.Dispatch<React.SetStateAction<UserProps | null>>;
 }
 
 const Profile = ({ data, setData }: IProfile): JSX.Element => {
@@ -26,34 +20,27 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
     const [followers, setFollowers] = useState([]);
     const [showEdit, setShowEdit] = useState(false);
     const [isCurrUserFoll, setIsCurrUserFoll] = useState(undefined);
+    const userParam = pathWoBackslash();
+
     const handleEditProfile = (): void => {
       setShowEdit(() => !showEdit);
     };
 
-    /* useEffect(() => {
-      const fetchData = async (): Promise<void> => {
-        const followingCount = await getUserFollowing(userhandle);
-        if (!cancelled) setFollowing(() => followingCount);
-        const followerArray = await getUserFollowers(userhandle);
-        if (!cancelled) setFollowers(() => followerArray);
-        if (userProfile?.userhandle !== userhandle) {
-          const ifFollow = followerArray.indexOf(userProfile?.userhandle) >= 0;
-          setIsCurrUserFoll(ifFollow);
-        }
-        // console.log('following fetched:', followingCount, 'followers:', followerCount);
-      };
-      let cancelled = false;
-      fetchData().catch(console.error);
+    const handleFollow = () => {
+      // if following
+      /* e.preventDefault();
+      void unfollow(userProfile?.userhandle, userhandle);
+      setIsCurrUserFoll((prev) => !prev); */
+      // if not following
+      /* e.preventDefault();
+      if (userProfile?.userhandle && userhandle) void follow(userProfile?.userhandle, userhandle);
+      setIsCurrUserFoll((prev) => !prev); */
+    };
 
-      return () => {
-        cancelled = true;
-      };
-    }, []); */
-
-    userEffect(() => {
+    useEffect(() => {
       const fetchData = async (): Promise<void> => {
         try {
-          const followingCount = await axios.get(`/user/${pathWoBackslash}/followers_count`);
+          const followingCount = await axios.get(`/user/${userParam}/followers_count`);
           // if (!cancelled) setFollowing(() => followingCount);
           console.log('followingCount:', followingCount);
         } catch (err) {
@@ -61,12 +48,12 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
         }
         const cancelled = false;
       };
-    });
-    const theJoinedDate = changeFirestoreTime(joined_date.seconds, joined_date.nanoseconds);
+    }, []);
+
     return (
       <>
-        {data?.bgURL ? (
-          <div style={{ backgroundImage: `url(${data.bgURL})` }} className="h-[200px]" />
+        {data?.header_pic ? (
+          <div style={{ backgroundImage: `url(${data?.header_pic})` }} className="h-[200px] bg-cover" />
         ) : (
           <div className="h-[200px] bg-dark-650" />
         )}
@@ -85,35 +72,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
               </button>
             ) : (
               <>
-                {isCurrUserFoll ? (
-                  <button
-                    className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full group group-hover:border-likesLineHover group-hover:border-solid-[1px]"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      void unfollow(userProfile?.userhandle, userhandle);
-                      setIsCurrUserFoll((prev) => !prev);
-                    }}
-                  >
-                    <div className="btn-follow w-[65px]">
-                      {/* on hover switch words to Unfollow */}
-                      <span className="group-hover:hidden">Following</span>
-                      <span className="hidden group-hover:block text-likesLineHover">Unfollow</span>
-                    </div>
-                  </button>
-                ) : (
-                  <button
-                    className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (userProfile?.userhandle && userhandle) void follow(userProfile?.userhandle, userhandle);
-                      setIsCurrUserFoll((prev) => !prev);
-                    }}
-                  >
-                    <div className="btn-follow">
-                      <span>Follow</span>
-                    </div>
-                  </button>
-                )}
+                <FollowBtn uid={data._id} />
               </>
             )}
           </div>
@@ -171,7 +130,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
                   </g>
                 </svg>
               </span>
-              <span className="text-greyTxt">Joined {showMonthAndYear(theJoinedDate)}</span>
+              <span className="text-greyTxt">Joined {showMonthAndYear(joined_date)}</span>
             </div>
           </div>
           <div className="flex flex-row text-[13px] leading-[15px]">

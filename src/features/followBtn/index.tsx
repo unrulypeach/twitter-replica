@@ -1,20 +1,43 @@
-import { follow, unfollow } from '../../services/firebase/firestore';
+import { useState, useEffect } from 'react';
+import { handleAxiosError } from '../../scripts/errorHandling';
+import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 
-export default function FollowBtn({ currUser, userhandle, status, setStatus }): JSX.Element {
-  // check if following already
+export default function FollowBtn({ uid }): JSX.Element {
+  const axiosPrivate = useAxiosPrivate();
+  const [status, setStatus] = useState();
+
+  // is user following
+  useEffect(() => {
+    axiosPrivate
+      .post('/following', { account: uid })
+      .then((res) => {
+        setStatus(res.data);
+      })
+      .catch((error) => handleAxiosError(error));
+  }, [uid]);
+
   const unfollowBtn = (): JSX.Element => {
     return (
       <button
-        className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
+        className="bg-white border-[1px] border-greyBorder min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full group hover:border-likesLineHover"
         onClick={(e) => {
           e.preventDefault();
-          void unfollow(currUser, userhandle);
-          setStatus((prev) => !prev);
+          axiosPrivate
+            .delete('/follow', {
+              data: { account: uid },
+            })
+            .then(() => {
+              setStatus((prev) => !prev);
+            })
+            .catch((error) => {
+              handleAxiosError(error);
+            });
         }}
       >
-        <div className="btn-follow">
+        <div className="btn-unfollow w-[65px]">
           {/* on hover switch words to Unfollow */}
-          <span>Following</span>
+          <span className="group-hover:hidden">Following</span>
+          <span className="hidden group-hover:block text-likesLineHover">Unfollow</span>
         </div>
       </button>
     );
@@ -26,8 +49,16 @@ export default function FollowBtn({ currUser, userhandle, status, setStatus }): 
         className="bg-black min-w-[30px] min-h-[30px] flex px-[15px] ml-11px rounded-full"
         onClick={(e) => {
           e.preventDefault();
-          if (currUser && userhandle) void follow(currUser, userhandle);
-          setStatus((prev) => !prev);
+          axiosPrivate
+            .post('/follow', {
+              account: uid,
+            })
+            .then(() => {
+              setStatus((prev) => !prev);
+            })
+            .catch((error) => {
+              handleAxiosError(error);
+            });
         }}
       >
         <div className="btn-follow">

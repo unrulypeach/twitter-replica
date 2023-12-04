@@ -10,7 +10,13 @@ export default function WhoToFollow({ suggestions }: WhoToFollowProps): JSX.Elem
       </div>
       {suggestions?.map((x: ShortUserProps) => {
         return (
-          <ProfileMiniFollow key={x._id} username={x.username} userhandle={x.userhandle} profile_pic={x.profile_pic} />
+          <ProfileMiniFollow
+            key={x._id}
+            _id={x._id}
+            username={x.username}
+            userhandle={x.userhandle}
+            profile_pic={x.profile_pic}
+          />
         );
       })}
       <div>
