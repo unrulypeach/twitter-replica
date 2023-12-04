@@ -1,5 +1,5 @@
-import type ProfileProps from "./profileProps";
+import type { ShortUserProps } from './tweetProps';
 
 export default interface WhoToFollowProps {
-  suggestions?: ProfileProps[];
+  suggestions: ShortUserProps[];
 }
