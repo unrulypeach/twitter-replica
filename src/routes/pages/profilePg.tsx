@@ -4,16 +4,21 @@ import Tabbar from '../../features/tabbar';
 import Profile from '../../components/user/profile';
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getPosts, getUserProfile } from '../../services/firebase/firestore';
 import Tweet from '../../features/tweet';
 import { pathWoBackslash } from '../../scripts/utils';
-import type { DocumentData } from 'firebase/firestore';
-import { useAuthContext } from '../../contexts/authContext';
+import axios from '../../api/axios';
+import { handleAxiosError } from '../../scripts/errorHandling';
+import type UserProps from '../../types/userProps';
+import type { ShortUserProps, TweetProps } from '../../types/tweetProps';
+
+interface ProfilePosts {
+  user: ShortUserProps;
+  posts: Array<TweetProps>;
+}
 
 export default function ProfilePage(): JSX.Element {
-  const { userProfile } = useAuthContext();
-  const [userData, setUserData] = useState<DocumentData | null>(null);
-  const noUser = pathWoBackslash().toLowerCase();
+  const [userData, setUserData] = useState<UserProps | null>(null);
+  const userParam = pathWoBackslash();
   const [loading, setLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(true);
   const [posts, setPosts] = useState<JSX.Element[]>([]);
@@ -22,45 +27,49 @@ export default function ProfilePage(): JSX.Element {
   useEffect(() => {
     setLoading(true);
     const userDataFetch = async () => {
-      if (noUser) {
+      if (userParam) {
         setPosts([]);
-        const fetchUser = await getUserProfile(noUser);
-        setUserData(() => fetchUser);
+        const fetchUser = await axios.get<UserProps>(`/user/${userParam}`);
+        setUserData(() => fetchUser.data);
         setLoading(() => false);
       }
     };
     userDataFetch().catch(console.error);
-  }, [noUser, userProfile]);
+  }, [userParam]);
 
   // get user posts
   useEffect(() => {
     setPostLoading(true);
-    if (userData?.userhandle) {
-      const { userhandle, username } = userData;
-      const postz = async (): Promise<void> => {
-        const dlPosts = await getPosts(userhandle);
-        const x = dlPosts.map((post, i) => {
-          return (
-            <Tweet
-              key={i}
-              id={post.id}
-              username={username}
-              userhandle={userhandle}
-              userPic={post?.userPic ?? ''}
-              text={post.content}
-              imgLink={post.profile_pic ?? ''}
-              date={post.time}
-              likes={post?.likes}
-              path={post?.path}
-            />
-          );
-        });
-        setPosts(() => x);
-        setPostLoading(false);
-      };
-      postz().catch(console.error);
-      console.log('posts fetched');
-    }
+    const postz = async () => {
+      if (userData?.userhandle) {
+        // const { userhandle, username } = userData;
+        try {
+          const postRes = await axios.get<ProfilePosts>(`/user/${userData?._id}/posts`);
+          const { user, posts } = postRes.data;
+          const x: Array<JSX.Element> = posts.map((post: TweetProps) => {
+            return (
+              <Tweet
+                key={post._id}
+                _id={post._id}
+                uid={user}
+                content={post.content}
+                // imgLink={post?.profile_pic ?? ''}
+                // path={post?.path}
+                date={post.date}
+                likes={post?.likes}
+                comments={post?.comments}
+              />
+            );
+          });
+          setPosts(() => x);
+          setPostLoading(false);
+        } catch (error) {
+          handleAxiosError(error);
+        }
+      }
+    };
+    postz().catch(console.error);
+    console.log('posts fetched:', postLoading);
   }, [userData]);
 
   return (
