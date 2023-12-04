@@ -58,6 +58,12 @@
             rounded-full border-[1px] border-black;
   }
 
+  .btn-unfollow {
+    @apply bg-white text-black text-[13px] leading-[15px] font-bold
+            flex flex-row justify-center items-center grow
+            rounded-full;
+  }
+
   .blue-icon {
     @apply fill-blue h-[1.25em];
   }
