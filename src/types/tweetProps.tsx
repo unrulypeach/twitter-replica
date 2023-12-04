@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-interface ShortUserProps {
+export interface ShortUserProps {
   _id: Types.ObjectId;
   username: string;
   userhandle: string;
