@@ -55,7 +55,7 @@ export default function Tweet({
 
   useEffect(() => {
     if (likes) {
-      if (likes.includes(userProfile._id)) setLiked(true);
+      if (likes.includes(userProfile?._id)) setLiked(true);
     }
   }, []);
 
