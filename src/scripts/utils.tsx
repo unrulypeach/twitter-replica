@@ -1,11 +1,9 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { type Timestamp } from 'firebase/firestore';
 import { Location, useLocation } from 'react-router-dom';
-import { changeFirestoreTime } from '../services/firebase/firestore';
 
 export const pathWoBackslash = (): string => {
   const location = useLocation().pathname;
-  return location.substring(1).charAt(0).toUpperCase() + location.slice(2);
+  return location.slice(1);
 };
 
 export const lastParam = (location: Location): string => {
@@ -13,10 +11,11 @@ export const lastParam = (location: Location): string => {
   return location.pathname.substring(n + 1);
 };
 
-export const showMonthAndYear = (date: Date): JSX.Element => {
+export const showMonthAndYear = (date: string): JSX.Element => {
+  const inputDate = new Date(date);
   return (
     <>
-      {date.toLocaleString('default', { month: 'long' })} {date.getFullYear()}
+      {inputDate.toLocaleString('default', { month: 'long' })} {inputDate.getFullYear()}
     </>
   );
 };
