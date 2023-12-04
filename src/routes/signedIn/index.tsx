@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
 import axios from '../../api/axios';
 import type { TweetProps } from '../../types/tweetProps';
+import { handleAxiosError } from '../../scripts/errorHandling';
 
 export default function SignedInHome(): JSX.Element {
   const [posts, setPosts] = useState<JSX.Element[]>([]);
@@ -37,8 +38,8 @@ export default function SignedInHome(): JSX.Element {
           );
         });
         setPosts(mappedPosts);
-      } catch (err) {
-        console.error(err);
+      } catch (error) {
+        handleAxiosError(error);
       }
     };
     postz().catch(console.error);
