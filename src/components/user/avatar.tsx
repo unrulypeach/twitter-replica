@@ -4,8 +4,8 @@ export default function Avatar({
   profile_pic = defaultPic,
   size = 39,
 }: {
-  profile_pic: string;
-  size: number;
+  profile_pic?: string;
+  size?: number;
 }): JSX.Element {
   return size === 39 ? (
     <>
