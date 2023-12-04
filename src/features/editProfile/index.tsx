@@ -59,7 +59,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
 
   useEffect(() => {
     if (!bgImgFile) {
-      setBgPicState(data?.bgURL ?? '');
+      setBgPicState(data?.header_pic ?? '');
       return;
     }
     const objectUrl = URL.createObjectURL(bgImgFile);
