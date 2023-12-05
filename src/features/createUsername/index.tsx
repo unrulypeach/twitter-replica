@@ -1,12 +1,62 @@
-import { useContext, useState } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import { SIGNUP_PAGE_CONTEXT } from '../../contexts/userContext';
 import CloseModal from '../signupModal/closeModal';
 import { Link } from 'react-router-dom';
+import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
+import { handleAxiosError, handleAxiosValidationError } from '../../scripts/errorHandling';
+import { useAuthContext } from '../../contexts/authContext';
 
 export default function CreateUsername(): JSX.Element {
+  const axiosPrivate = useAxiosPrivate();
+  const { setUserProfile } = useAuthContext();
   const { setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
-
   const [username, setUsername] = useState('');
+  const [validationErrMsg, setValidationErrMsg] = useState([]);
+  const [userhandleIsValid, setUserhandleIsValid] = useState('');
+  const [userhandleSubmit, setUserhandleSubmit] = useState(false);
+
+  const handleSubmit = () => {
+    axiosPrivate
+      .post('/sethandle', { userhandle: username })
+      .then(() => {
+        setUserProfile((prev) => {
+          return { ...prev, userhandle: username };
+        });
+        if (setSignupPage) setSignupPage(0);
+      })
+      .catch((error) => {
+        handleAxiosError(error);
+      });
+  };
+
+  useEffect(() => {
+    const checkUsername = async () => {
+      try {
+        const res = await axiosPrivate.post('/checkhandle', {
+          userhandle: username,
+        });
+        if ((res.data = 200)) {
+          setUserhandleIsValid(() => username + ' is available');
+          setUserhandleSubmit(true);
+        }
+        console.log(username, 'is', res.data);
+      } catch (error) {
+        const errorArray = handleAxiosValidationError(error);
+        setUserhandleIsValid(() => '');
+        setValidationErrMsg(() => errorArray);
+      }
+    };
+
+    const debouncer = setTimeout(() => {
+      if (username !== '') {
+        checkUsername();
+      }
+    }, 600);
+    return () => {
+      clearTimeout(debouncer);
+    };
+  }, [username]);
+
   return (
     <div className="max-w-[600px] h-full">
       <div className="flex flex-row w-full pt-3">
@@ -59,10 +109,24 @@ export default function CreateUsername(): JSX.Element {
                       required
                       onChange={(e) => {
                         setUsername(e.target.value);
+                        setValidationErrMsg(() => []);
+                        setUserhandleIsValid('');
+                        setUserhandleSubmit(false);
                       }}
                     />
                   </div>
                 </label>
+              </div>
+              <div>
+                {userhandleIsValid && <div>{userhandleIsValid}</div>}
+                {validationErrMsg &&
+                  validationErrMsg.map((item, ind) => {
+                    return (
+                      <div key={ind} className="text-likesLineHover">
+                        "{item.value}" {item.msg}
+                      </div>
+                    );
+                  })}
               </div>
             </div>
           </div>
@@ -70,15 +134,36 @@ export default function CreateUsername(): JSX.Element {
       </div>
 
       <div className="flex flex-col px-[80px]">
-        <Link
-          to="/"
-          className="bg-black text-white flex items-center justify-center h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
-          onClick={() => {
-            if (setSignupPage) setSignupPage(0);
-          }}
-        >
-          <span>Finish</span>
-        </Link>
+        {username ? (
+          userhandleSubmit ? (
+            <Link
+              to="/"
+              className="bg-black text-white flex items-center justify-center h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+              onClick={() => {
+                handleSubmit();
+              }}
+            >
+              <span>Submit & Finish</span>
+            </Link>
+          ) : (
+            <Link
+              to="/"
+              className="bg-black text-likesLineHover pointer-events-none flex items-center justify-center h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+            >
+              <span>Submit & Finish</span>
+            </Link>
+          )
+        ) : (
+          <Link
+            to="/"
+            className="bg-black text-white flex items-center justify-center h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+            onClick={() => {
+              if (setSignupPage) setSignupPage(0);
+            }}
+          >
+            <span>Skip for now</span>
+          </Link>
+        )}
       </div>
     </div>
   );
