@@ -1,11 +1,12 @@
 import Avatar from './avatar';
 import { useAuthContext } from '../../contexts/authContext';
-import { pathWoBackslash, showMonthAndYear } from '../../scripts/utils';
+import { showMonthAndYear } from '../../scripts/utils';
 import React, { useEffect, useState } from 'react';
 import EditProfile from '../../features/editProfile';
 import axios from '../../api/axios';
 import type UserProps from '../../types/userProps';
 import FollowBtn from '../../features/followBtn';
+import { handleAxiosError } from '../../scripts/errorHandling';
 interface IProfile {
   data: UserProps;
   setData: React.Dispatch<React.SetStateAction<UserProps | null>>;
@@ -15,39 +16,28 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
   const { userProfile } = useAuthContext();
 
   const AssignedProfile = (): JSX.Element => {
-    const { userhandle, username, profile_pic, joined_date, bio } = data;
+    const { userhandle, username, profile_pic, joined_date, bio, _id } = data;
     const [following, setFollowing] = useState(0);
-    const [followers, setFollowers] = useState([]);
+    const [followers, setFollowers] = useState(0);
     const [showEdit, setShowEdit] = useState(false);
-    const [isCurrUserFoll, setIsCurrUserFoll] = useState(undefined);
-    const userParam = pathWoBackslash();
 
     const handleEditProfile = (): void => {
       setShowEdit(() => !showEdit);
     };
 
-    const handleFollow = () => {
-      // if following
-      /* e.preventDefault();
-      void unfollow(userProfile?.userhandle, userhandle);
-      setIsCurrUserFoll((prev) => !prev); */
-      // if not following
-      /* e.preventDefault();
-      if (userProfile?.userhandle && userhandle) void follow(userProfile?.userhandle, userhandle);
-      setIsCurrUserFoll((prev) => !prev); */
-    };
-
     useEffect(() => {
-      const fetchData = async (): Promise<void> => {
-        try {
-          const followingCount = await axios.get(`/user/${userParam}/followers_count`);
-          // if (!cancelled) setFollowing(() => followingCount);
-          console.log('followingCount:', followingCount);
-        } catch (err) {
-          console.error(err);
-        }
-        const cancelled = false;
-      };
+      axios
+        .get<number>(`/user/${_id}/followers_count`)
+        .then((res) => {
+          setFollowers(() => res.data);
+        })
+        .catch((error) => handleAxiosError(error));
+      axios
+        .get<number>(`/user/${_id}/following_count`)
+        .then((res) => {
+          setFollowing(() => res.data);
+        })
+        .catch((error) => handleAxiosError(error));
     }, []);
 
     return (
@@ -138,7 +128,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
               <span className="font-bold">{following}</span> <span className="text-greyTxt">Following</span>
             </div>
             <div>
-              <span className="font-bold">{followers.length}</span> <span className="text-greyTxt">Followers</span>
+              <span className="font-bold">{followers}</span> <span className="text-greyTxt">Followers</span>
             </div>
           </div>
         </div>
