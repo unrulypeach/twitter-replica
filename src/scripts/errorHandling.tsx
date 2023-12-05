@@ -8,3 +8,11 @@ export function handleAxiosError(error) {
     }
   }
 }
+
+export function handleAxiosValidationError(error) {
+  if (error instanceof AxiosError) {
+    if (error.response) {
+      return error.response.data.errors;
+    }
+  }
+}
