@@ -14,9 +14,7 @@ export default function CreatePassword(): JSX.Element {
   const { signupPage, setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
   const { setUserProfile, setCurrentUser } = useAuthContext();
 
-  async function handleSubmit(e: Event): Promise<void> {
-    e.preventDefault();
-
+  async function handleSubmit(): Promise<void> {
     try {
       const res = await axiosPrivate.post('/signup', {
         name,
@@ -106,10 +104,11 @@ export default function CreatePassword(): JSX.Element {
 
       <div className="flex flex-col px-[80px]">
         <button
-          className="bg-black text-white h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+          disabled={!(password.length > 8)}
+          className="bg-black text-white h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold disabled:opacity-75"
           type="button"
-          onClick={(e) => {
-            void handleSubmit(e);
+          onClick={() => {
+            void handleSubmit();
           }}
         >
           Next
