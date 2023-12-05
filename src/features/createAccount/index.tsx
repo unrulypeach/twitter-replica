@@ -16,7 +16,7 @@ export default function CreateAccount(): JSX.Element {
     );
   }
 
-  const [month, setMonth] = useState(1);
+  const [month, setMonth] = useState(0);
   const [day, setDay] = useState(0);
   const [year, setYear] = useState(0);
 
@@ -28,7 +28,8 @@ export default function CreateAccount(): JSX.Element {
   // const submitDataToCreateUser = (email) => {};
 
   useEffect(() => {
-    const newDays = moment(`${currYr}-${month}`, 'YYYY-MM').daysInMonth();
+    const defaultMonth = month === 0 ? 1 : month;
+    const newDays = moment(`${currYr}-${defaultMonth}`, 'YYYY-MM').daysInMonth();
     const newDaysArr = [];
     for (let i = 1; i <= newDays; i++) {
       newDaysArr.push(
@@ -38,7 +39,7 @@ export default function CreateAccount(): JSX.Element {
       );
     }
     setDays(newDaysArr);
-  }, [month]);
+  }, [month, currYr]);
 
   return (
     <div className="max-w-[600px] h-[650px] flex flex-col">
@@ -119,6 +120,7 @@ export default function CreateAccount(): JSX.Element {
                   </div>
                   <div className="label-signup">
                     <input
+                      required
                       type="email"
                       className="input-signup"
                       maxLength={50}
@@ -149,6 +151,7 @@ export default function CreateAccount(): JSX.Element {
                       Month
                     </label>
                     <select
+                      required
                       name="month"
                       id="month"
                       className="select-signup"
@@ -177,6 +180,7 @@ export default function CreateAccount(): JSX.Element {
                       Day
                     </label>
                     <select
+                      required
                       name="day"
                       id="day"
                       className="select-signup"
@@ -194,6 +198,7 @@ export default function CreateAccount(): JSX.Element {
                       Year
                     </label>
                     <select
+                      required
                       name="year"
                       id="year"
                       className="select-signup"
@@ -213,15 +218,10 @@ export default function CreateAccount(): JSX.Element {
 
         <div className="flex flex-col px-[80px]">
           <button
-            className="my-[23px] bg-black text-white h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold"
+            disabled={!month || !day || !year || !name || !email}
+            className="my-[23px] bg-black text-white h-[49px] w-full rounded-full text-[16px] leading-[19px] font-bold disabled:opacity-75"
             type="button"
             onClick={() => {
-              // const conglomeratedInfo = {
-              //   username: name,
-              //   email,
-              //   birthday: new Date(year, month - 1, day),
-              // };
-
               if (setNewUserData)
                 setNewUserData({
                   name,
