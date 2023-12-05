@@ -4,8 +4,8 @@ export default interface UserProps {
   _id: Types.ObjectId;
   username: string;
   userhandle: string;
-  birthdate: Date;
-  joined_date: Date;
+  birthdate: string;
+  joined_date: string;
 
   profile_pic?: string;
   header_pic?: string;
