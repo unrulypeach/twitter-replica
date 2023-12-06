@@ -22,7 +22,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
     const [showEdit, setShowEdit] = useState(false);
 
     const handleEditProfile = (): void => {
-      setShowEdit(() => !showEdit);
+      setShowEdit((prev) => !prev);
     };
 
     useEffect(() => {
