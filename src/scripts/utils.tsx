@@ -78,3 +78,7 @@ export const convertToTimeSince = (date: string): JSX.Element => {
     );
   else return showMonthAndDay(inputDate);
 };
+
+export const currTimeUnix = () => {
+  return new Date().getTime() / 1000;
+};
