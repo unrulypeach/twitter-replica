@@ -1,41 +1,50 @@
 import { useEffect, useState } from 'react';
 import { closeModalX, uploadPic } from '../../styles/assets/icons/iconData';
-import { type DocumentSnapshot, type DocumentData } from 'firebase/firestore';
+import { type DocumentData } from 'firebase/firestore';
 import Avatar from '../../components/user/avatar';
 import { useAuthContext } from '../../contexts/authContext';
+import UserProps from '../../types/userProps';
+import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 
 interface IEditProfile {
   showModal: boolean;
-  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
-  data: DocumentSnapshot<DocumentData | undefined>;
+  setShowModal: () => void;
+  data: UserProps;
   setUserInfo: React.Dispatch<React.SetStateAction<DocumentData | null>>;
 }
 export default function EditProfile({ showModal, setShowModal, data, setUserInfo }: IEditProfile): JSX.Element {
-  const { editUserProfile, uploadUserPhoto, uploadBgPhoto, userProfile, setUserProfile } = useAuthContext();
-  const { bio, location, website, username, userhandle, profile_pic } = data;
+  const axiosPrivate = useAxiosPrivate();
+  const { uploadUserPhoto, uploadBgPhoto, userProfile, setUserProfile } = useAuthContext();
+  const { bio, location, website, username, profile_pic /* userhandle */ } = data;
   const [name, setName] = useState(username ?? '');
   const [bioState, setBioState] = useState(bio ?? '');
   const [locationState, setLocationState] = useState(location ?? '');
   const [websiteState, setWebsiteState] = useState(website ?? '');
-  const [profPicState, setProfPicState] = useState();
+  const [profPicState, setProfPicState] = useState<string | undefined>();
   const [bgPicState, setBgPicState] = useState();
   const [imgFile, setImgFile] = useState<File | undefined>(undefined);
   const [bgImgFile, setBgImgFile] = useState<File | undefined>(undefined);
 
   const handleSave = async () => {
-    const newEdit = {
-      bio: bioState,
-      username: name,
-      location: locationState,
-      website: websiteState,
-    };
-    let userPic;
+    let userPic: string | undefined;
+    let bgPhoto: string | undefined;
     if (imgFile) userPic = await uploadUserPhoto(imgFile);
+    if (bgImgFile) bgPhoto = await uploadBgPhoto(bgImgFile);
+
+    const newEdit = {
+      ...(bioState && { bio: bioState }),
+      ...(name && { username: name }),
+      ...(locationState && { location: locationState }),
+      ...(websiteState && { website: websiteState }),
+      ...(userPic && { profile_pic: userPic }),
+      ...(bgPhoto && { header_pic: bgPhoto }),
+    };
+
+    axiosPrivate.put(`/user/${_id}`, newEdit);
+    // move this to after submitting
     setUserProfile((prev) => {
       return { ...prev, profile_pic: userPic };
     });
-    if (bgImgFile) void uploadBgPhoto(bgImgFile);
-    void editUserProfile(userProfile?.uid, newEdit);
   };
 
   const handleClosePg = () => {
