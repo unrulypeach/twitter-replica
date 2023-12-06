@@ -4,13 +4,13 @@ import type InewUser from '../types/InewUser';
 import { newUserDefault } from '../defaults/newUserDefault';
 
 interface I_SIGNUP_PAGE_CONTEXT {
-  signupPage?: number;
-  setSignupPage?: React.Dispatch<React.SetStateAction<number>>;
+  signupPage: number;
+  setSignupPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface I_LOGIN_PAGE_CONTEXT {
-  loginPage?: number;
-  setLoginPage?: React.Dispatch<React.SetStateAction<number>>;
+  loginPage: number;
+  setLoginPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 interface I_NEW_USER_CONTEXT {
