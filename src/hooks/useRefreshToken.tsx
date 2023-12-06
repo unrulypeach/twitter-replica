@@ -1,13 +1,22 @@
 import { AxiosResponse } from 'axios';
 import { axiosPrivate } from '../api/axios';
 import RefreshProps from '../types/refreshProps';
+import { handleAxiosError } from '../scripts/errorHandling';
 
 const useRefreshToken = () => {
+  let res: AxiosResponse<RefreshProps>;
   const refresh = async () => {
-    const res: AxiosResponse<RefreshProps> = await axiosPrivate.get('/refresh');
-
-    localStorage.setItem('token', res.data.access_token);
-    return res.data.access_token;
+    try {
+      res = await axiosPrivate.get('/refresh');
+      const { access_token, user } = res.data;
+      localStorage.setItem('token', access_token);
+      console.log('token refreshed');
+      return user;
+    } catch (error) {
+      handleAxiosError(error);
+    } finally {
+      console.log(res);
+    }
   };
 
   return refresh;

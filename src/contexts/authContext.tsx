@@ -7,7 +7,8 @@ import type UserProps from '../types/userProps';
 import useRefreshToken from '../hooks/useRefreshToken';
 import { handleAxiosError } from '../scripts/errorHandling';
 import { jwtDecode } from 'jwt-decode';
-import { currTimeUnix } from '../scripts/utils';
+import useAxiosPrivate from '../hooks/useAxiosInterceptors';
+import { currTime } from '../scripts/utils';
 
 interface IAuthContext {
   userProfile?: UserProps;
@@ -30,6 +31,8 @@ export function useAuthContext(): IAuthContext {
 export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   const [userProfile, setUserProfile] = useState<UserProps>();
   const [loginData, setLoginData] = useState<string>('');
+  const axiosPrivate = useAxiosPrivate();
+  const refresh = useRefreshToken();
 
   // uploads photo to cloud storage
   async function uploadUserPhoto(file: File): Promise<string | undefined> {
@@ -79,17 +82,38 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   // check local storage for 'token' and try to log in
   useEffect(() => {
     const access_token = localStorage.getItem('token');
-    const decodedToken = jwtDecode(access_token);
+    const validate = () => {
+      axiosPrivate
+        .get('/validate')
+        .then((res) => {
+          const user = res.data;
+          console.log(user);
+          setUserProfile(() => {
+            return user;
+          });
+        })
+        .catch((error) => {
+          handleAxiosError(error);
+        });
+    };
+    const refreshIt = () => {
+      refresh()
+        .then((user) => {
+          console.log('refreshed');
+          setUserProfile(user);
+        })
+        .catch((err) => {
+          console.error(err);
+          handleAxiosError(err);
+        });
+    };
 
-    // check if access token expired
-    if (decodedToken.iat > currTimeUnix()) {
-      setUserProfile(decodedToken.user);
-    } else {
-      const refresh = useRefreshToken();
-      try {
-        refresh().then((token) => {});
-      } catch (err) {
-        handleAxiosError(err);
+    if (access_token) {
+      const decodedToken = jwtDecode(access_token);
+      if (decodedToken.exp > currTime()) {
+        validate();
+      } else {
+        refreshIt();
       }
     }
   }, []);

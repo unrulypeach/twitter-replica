@@ -13,7 +13,7 @@ const useAxiosPrivate = () => {
     const requestIntercept = axiosPrivate.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {
-          config.headers['Authorization'] = `Bearer ${access_token}`; // TODO: get this from cookie
+          config.headers['Authorization'] = `Bearer ${access_token}`;
         }
         return config;
       },
@@ -26,9 +26,11 @@ const useAxiosPrivate = () => {
       async (error: AxiosError) => {
         const prevRequest = error?.config;
         // 403 auth error and already tried
-        if (error?.response?.status === 403 && !prevRequest?.sent) {
+        if ((error?.response?.status === 403 || error?.response?.status === 401) && !prevRequest?.sent) {
           prevRequest.sent = true;
-          const newAccessToken = await refresh();
+          await refresh();
+          const newAccessToken = localStorage.getItem('token');
+
           prevRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return axiosPrivate(prevRequest);
         }
