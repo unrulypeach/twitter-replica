@@ -17,7 +17,6 @@ export default function SignedInRSideMenu({ path }: HeaderProps): JSX.Element {
         const mappedRes = res.map((element) => {
           return element.data;
         });
-        console.log(mappedRes);
         setReccList(mappedRes);
       })
       .catch((error) => handleAxiosError(error));
