@@ -9,7 +9,9 @@ interface IAuthContext {
   currentUser?: string;
   setCurrentUser: React.Dispatch<React.SetStateAction<string>>;
   userProfile?: UserProps;
-  setUserProfile?: React.Dispatch<React.SetStateAction<UserProps>>;
+  setUserProfile: React.Dispatch<React.SetStateAction<UserProps>>;
+  loginData?: string;
+  setLoginData: React.Dispatch<React.SetStateAction<string>>;
 
   loginWithGooglePopup: () => Promise<UserCredential>;
 
@@ -26,6 +28,7 @@ export function useAuthContext(): IAuthContext {
 export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   const [currentUser, setCurrentUser] = useState({});
   const [userProfile, setUserProfile] = useState<UserProps>();
+  const [loginData, setLoginData] = useState<string>('');
 
   // uploads photo to cloud storage
   async function uploadUserPhoto(file: File): Promise<string | undefined> {
@@ -78,11 +81,13 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       setCurrentUser,
       userProfile,
       setUserProfile,
+      loginData,
+      setLoginData,
       uploadUserPhoto,
       uploadBgPhoto,
       loginWithGooglePopup,
     };
-  }, [currentUser, userProfile]);
+  }, [currentUser, userProfile, loginData]);
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

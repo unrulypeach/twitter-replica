@@ -5,7 +5,7 @@ import { useAuthContext } from '../../contexts/authContext';
 export default function LoginSection(): JSX.Element {
   const [loginEmail, setLoginEmail] = useState('');
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
-  const { userProfile, setUserProfile } = useAuthContext();
+  const { setLoginData } = useAuthContext();
   return (
     <div className="flex flex-col ">
       <div className="py-[12px] px-0">
@@ -27,16 +27,19 @@ export default function LoginSection(): JSX.Element {
               )}
             </div>
             <div className="label-signup">
-              <input
-                type="text"
-                className="input-signup"
-                maxLength={50}
-                placeholder=" "
-                required
-                onChange={(e) => {
-                  setLoginEmail(e.target.value);
-                }}
-              />
+              <label htmlFor="email">
+                <input
+                  name="email"
+                  type="text"
+                  className="input-signup"
+                  maxLength={50}
+                  placeholder=" "
+                  required
+                  onChange={(e) => {
+                    setLoginEmail(e.target.value);
+                  }}
+                />
+              </label>
             </div>
           </label>
         </div>
@@ -47,8 +50,8 @@ export default function LoginSection(): JSX.Element {
           className="my-[11px] bg-black text-white h-[32px] w-full rounded-full text-[14px] leading-[19px] font-bold"
           type="button"
           onClick={() => {
+            if (setLoginData) setLoginData(() => loginEmail);
             if (setLoginPage) setLoginPage(1);
-            if (setUserProfile) setUserProfile({ ...userProfile, email: loginEmail });
           }}
         >
           Next

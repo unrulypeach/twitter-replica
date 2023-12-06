@@ -6,19 +6,19 @@ import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
 import { Link } from 'react-router-dom';
 import { axiosPrivate } from '../../api/axios';
 import { jwtDecode } from 'jwt-decode';
+import { handleAxiosError } from '../../scripts/errorHandling';
 
 export default function EnterPassword(): JSX.Element {
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { setUserProfile, userProfile, setCurrentUser } = useAuthContext();
-  // const [cookies, setCookies] = useCookies(['token']);
+  const { setUserProfile, loginData, setCurrentUser } = useAuthContext();
 
   async function handleNext(): Promise<void> {
-    if (userProfile?.email && password) {
+    if (loginData && password) {
       try {
         const res = await axiosPrivate.post('/login', {
-          email: userProfile.email,
+          email: loginData,
           password,
         });
         const { access_token } = res.data;
@@ -29,7 +29,8 @@ export default function EnterPassword(): JSX.Element {
         setCurrentUser(access_token);
         setLoginPage(0);
       } catch (err) {
-        console.error(err);
+        // setLoginPage(0);
+        handleAxiosError(err);
       }
     }
   }
