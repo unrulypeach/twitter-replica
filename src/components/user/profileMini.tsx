@@ -3,10 +3,24 @@ import { moreNoBorder } from '../../styles/assets/icons/iconData';
 import { useAuthContext } from '../../contexts/authContext';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { handleAxiosError } from '../../scripts/errorHandling';
+import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 
 export default function ProfileMini(): JSX.Element {
-  const { userProfile, logout } = useAuthContext();
+  const axiosPrivate = useAxiosPrivate();
+  const { userProfile, setUserProfile } = useAuthContext();
   const [popped, setPopped] = useState(false);
+  const handleSubmit = async () => {
+    try {
+      const res = await axiosPrivate.post('/logout');
+      if (res.status === 200) {
+        localStorage.removeItem('token');
+        setUserProfile(() => {});
+      }
+    } catch (error) {
+      handleAxiosError(error);
+    }
+  };
 
   const LogoutPopup = (): JSX.Element => {
     return (
@@ -14,7 +28,7 @@ export default function ProfileMini(): JSX.Element {
         to="/"
         className="w-[270px] fixed bottom-[79px] z-10"
         onClick={() => {
-          if (logout) void logout();
+          handleSubmit();
         }}
       >
         <div className="shadow-reg rounded-[14px] py-[22px] px-[15px] cursor-pointer">
