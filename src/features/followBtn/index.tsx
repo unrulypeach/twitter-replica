@@ -1,19 +1,23 @@
 import { useState, useEffect } from 'react';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
+import { useAuthContext } from '../../contexts/authContext';
 
 export default function FollowBtn({ uid }): JSX.Element {
+  const { userProfile } = useAuthContext();
   const axiosPrivate = useAxiosPrivate();
   const [status, setStatus] = useState();
 
   // is user following
   useEffect(() => {
-    axiosPrivate
-      .post('/following', { account: uid })
-      .then((res) => {
-        setStatus(res.data);
-      })
-      .catch((error) => handleAxiosError(error));
+    if (userProfile) {
+      axiosPrivate
+        .post('/following', { account: uid })
+        .then((res) => {
+          setStatus(res.data);
+        })
+        .catch((error) => handleAxiosError(error));
+    }
   }, [uid]);
 
   const unfollowBtn = (): JSX.Element => {
