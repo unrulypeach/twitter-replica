@@ -1,9 +1,13 @@
-import { createContext, useContext, useMemo, useState } from 'react';
+import { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import type ChildrenProps from '../types/childrenProps';
 import { type UserCredential, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { auth, storage } from '../configs/firebase-config';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
 import type UserProps from '../types/userProps';
+import useRefreshToken from '../hooks/useRefreshToken';
+import { handleAxiosError } from '../scripts/errorHandling';
+import { jwtDecode } from 'jwt-decode';
+import { currTimeUnix } from '../scripts/utils';
 
 interface IAuthContext {
   currentUser?: string;
@@ -74,6 +78,24 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
     const provider = new GoogleAuthProvider();
     return await signInWithPopup(auth, provider);
   }
+
+  // check local storage for 'token' and try to log in
+  useEffect(() => {
+    const access_token = localStorage.getItem('token');
+    // check if access token expired
+    const decodedToken = jwtDecode(access_token);
+
+    if (decodedToken.iat > currTimeUnix()) {
+      setUserProfile(decodedToken.user);
+    } else {
+      const refresh = useRefreshToken();
+      try {
+        refresh().then((token) => {});
+      } catch (err) {
+        handleAxiosError(err);
+      }
+    }
+  }, []);
 
   const values = useMemo(() => {
     return {
