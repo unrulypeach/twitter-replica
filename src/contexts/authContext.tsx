@@ -10,8 +10,6 @@ import { jwtDecode } from 'jwt-decode';
 import { currTimeUnix } from '../scripts/utils';
 
 interface IAuthContext {
-  currentUser?: string;
-  setCurrentUser: React.Dispatch<React.SetStateAction<string>>;
   userProfile?: UserProps;
   setUserProfile: React.Dispatch<React.SetStateAction<UserProps>>;
   loginData?: string;
@@ -30,7 +28,6 @@ export function useAuthContext(): IAuthContext {
 }
 
 export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
-  const [currentUser, setCurrentUser] = useState({});
   const [userProfile, setUserProfile] = useState<UserProps>();
   const [loginData, setLoginData] = useState<string>('');
 
@@ -82,9 +79,9 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   // check local storage for 'token' and try to log in
   useEffect(() => {
     const access_token = localStorage.getItem('token');
-    // check if access token expired
     const decodedToken = jwtDecode(access_token);
 
+    // check if access token expired
     if (decodedToken.iat > currTimeUnix()) {
       setUserProfile(decodedToken.user);
     } else {
@@ -99,8 +96,6 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
 
   const values = useMemo(() => {
     return {
-      currentUser,
-      setCurrentUser,
       userProfile,
       setUserProfile,
       loginData,
@@ -109,7 +104,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       uploadBgPhoto,
       loginWithGooglePopup,
     };
-  }, [currentUser, userProfile, loginData]);
+  }, [userProfile, loginData]);
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>;
 };

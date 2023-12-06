@@ -12,7 +12,7 @@ export default function CreatePassword(): JSX.Element {
   const { newUserData } = useContext(NEW_USER_CONTEXT);
   const { name, email, birthdate } = newUserData;
   const { signupPage, setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
-  const { setUserProfile, setCurrentUser } = useAuthContext();
+  const { setUserProfile } = useAuthContext();
 
   async function handleSubmit(): Promise<void> {
     try {

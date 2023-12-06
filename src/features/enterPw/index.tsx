@@ -12,7 +12,7 @@ export default function EnterPassword(): JSX.Element {
   const { setLoginPage } = useContext(LOGIN_PAGE_CONTEXT);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const { setUserProfile, loginData, setCurrentUser } = useAuthContext();
+  const { setUserProfile, loginData } = useAuthContext();
 
   async function handleNext(): Promise<void> {
     if (loginData && password) {
