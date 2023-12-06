@@ -26,7 +26,7 @@ export default function CreatePassword(): JSX.Element {
       const decodedToken = jwtDecode(access_token);
       const { user } = decodedToken;
       setUserProfile(user);
-      setCurrentUser(access_token);
+      localStorage.setItem('token', access_token);
       if (setSignupPage) setSignupPage(Number(signupPage) + 1);
     } catch (err) {
       console.error(err);

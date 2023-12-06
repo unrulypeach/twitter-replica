@@ -22,11 +22,10 @@ export default function EnterPassword(): JSX.Element {
           password,
         });
         const { access_token } = res.data;
-        // setCookies('token', access_token, { sameSite: 'none', secure: true });
         const decodedToken = jwtDecode(access_token);
         const { user } = decodedToken;
         setUserProfile(user);
-        setCurrentUser(access_token);
+        localStorage.setItem('token', access_token);
         setLoginPage(0);
       } catch (err) {
         // setLoginPage(0);
