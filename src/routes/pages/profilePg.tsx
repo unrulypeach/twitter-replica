@@ -28,13 +28,17 @@ export default function ProfilePage(): JSX.Element {
     setLoading(true);
     const userDataFetch = async () => {
       if (userParam) {
-        setPosts([]);
-        const fetchUser = await axios.get<UserProps>(`/user/${userParam}`);
-        setUserData(() => fetchUser.data);
-        setLoading(() => false);
+        try {
+          setPosts([]);
+          const fetchUser = await axios.get<UserProps>(`/user/${userParam}`);
+          setUserData(() => fetchUser.data);
+          setLoading(() => false);
+        } catch (error) {
+          handleAxiosError(error);
+        }
       }
     };
-    userDataFetch().catch(console.error);
+    void userDataFetch();
   }, [userParam]);
 
   // get user posts
@@ -68,8 +72,7 @@ export default function ProfilePage(): JSX.Element {
         }
       }
     };
-    postz().catch(console.error);
-    console.log('posts fetched:', postLoading);
+    void postz();
   }, [userData]);
 
   return (
