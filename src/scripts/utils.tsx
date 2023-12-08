@@ -82,3 +82,8 @@ export const convertToTimeSince = (date: string): JSX.Element => {
 export const currTime = () => {
   return Math.floor(new Date().getTime() / 1000);
 };
+
+export const htmlDecode = (str: string) => {
+  const doc = new DOMParser().parseFromString(str, 'text/html');
+  return doc.documentElement.textContent;
+};
