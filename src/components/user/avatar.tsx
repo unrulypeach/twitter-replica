@@ -9,7 +9,11 @@ export default function Avatar({
 }): JSX.Element {
   return size === 39 ? (
     <>
-      <img className="h-[39px] w-[39px] rounded-full object-cover" src={profile_pic || defaultPic} alt="" />
+      <img
+        className="h-[39px] w-[39px] min-w-[39px] rounded-full object-cover"
+        src={profile_pic || defaultPic}
+        alt=""
+      />
     </>
   ) : (
     <>
