@@ -5,7 +5,7 @@ import Profile from '../../components/user/profile';
 import { Outlet } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Tweet from '../../features/tweet';
-import { pathWoBackslash } from '../../scripts/utils';
+import { pathWoBackslash, htmlDecode } from '../../scripts/utils';
 import axios from '../../api/axios';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import type UserProps from '../../types/userProps';
@@ -51,12 +51,13 @@ export default function ProfilePage(): JSX.Element {
           const postRes = await axios.get<ProfilePosts>(`/user/${userData?._id}/posts`);
           const { user, posts } = postRes.data;
           const x: Array<JSX.Element> = posts.map((post: TweetProps) => {
+            const decodedContent = htmlDecode(post.content);
             return (
               <Tweet
                 key={post._id}
                 _id={post._id}
                 uid={user}
-                content={post.content}
+                content={decodedContent}
                 // imgLink={post?.profile_pic ?? ''}
                 // path={post?.path}
                 date={post.date}

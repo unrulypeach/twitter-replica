@@ -9,10 +9,11 @@ import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu
 import axios from '../../api/axios';
 import type { TweetProps } from '../../types/tweetProps';
 import { handleAxiosError } from '../../scripts/errorHandling';
+import { htmlDecode } from '../../scripts/utils';
 
 export default function SignedInHome(): JSX.Element {
   const [posts, setPosts] = useState<JSX.Element[]>([]);
-  const [shouldUpdate, setShouldUpdate] = useState(false);
+  const [shouldUpdate, setShouldUpdate] = useState<boolean>(false);
 
   const { userProfile } = useAuthContext();
   useEffect(() => {
@@ -23,12 +24,13 @@ export default function SignedInHome(): JSX.Element {
       try {
         const postRes = await axios.get<TweetProps[]>('/post/homepage');
         const mappedPosts: Array<JSX.Element> = postRes.data.map((post: TweetProps) => {
+          const decodedContent = htmlDecode(post.content);
           return (
             <Tweet
               key={post._id}
               _id={post._id}
               uid={post.uid}
-              content={post.content}
+              content={decodedContent}
               // imgLink={post?.profile_pic ?? ''}
               // path={post?.path}
               date={post.date}

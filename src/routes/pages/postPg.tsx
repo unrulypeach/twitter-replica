@@ -2,13 +2,14 @@ import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu
 import { useAuthContext } from '../../contexts/authContext';
 import Avatar from '../../components/user/avatar';
 import { useLocation } from 'react-router-dom';
-import { lastParam, showMonthDayAndYear, showTime } from '../../scripts/utils';
+import { htmlDecode, lastParam, showMonthDayAndYear, showTime } from '../../scripts/utils';
 import { reply, retweet, like, likeFilled, views, share } from '../../styles/assets/icons/iconData';
-import { useRef, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Tweet from '../../features/tweet';
 import axios, { axiosPrivate } from '../../api/axios';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import { TweetPopulatedCommentsProps } from '../../types/tweetProps';
+import Reply from '../../features/reply';
 
 export default function PostPg(): JSX.Element {
   const { userProfile } = useAuthContext();
@@ -19,6 +20,7 @@ export default function PostPg(): JSX.Element {
   const [replies, setReplies] = useState([]);
   const [likesCount, setLikesCount] = useState(0);
 
+  // fetch tweet with comments populated
   useEffect(() => {
     axios
       .get<{ data: TweetPopulatedCommentsProps }>(`/post/${postid}`)
@@ -33,15 +35,12 @@ export default function PostPg(): JSX.Element {
       });
   }, []);
 
-  // TODO: did current user like post
+  // set liked if uid in liked array
   useEffect(() => {
     if (postData?.likes?.length) {
       if (postData?.likes.includes(userProfile?._id)) setThisLiked(true);
     }
   }, [postData]);
-
-  const textareaRef = useRef(null);
-  const [currentValue, setCurrentValue] = useState('');
 
   const handleLike = () => {
     if (!thisLiked) {
@@ -72,27 +71,16 @@ export default function PostPg(): JSX.Element {
     }
   };
 
-  const handleSubmitReply = () => {
-    /* void postReply(userProfile?.userhandle, userProfile?.username, userhandle, id, currentValue).then(
-      setCurrentValue(''),
-    ); */
-  };
-
-  useEffect(() => {
-    textareaRef.current.style.height = '0px';
-    const scrollHeight = textareaRef.current.scrollHeight;
-    textareaRef.current.style.height = scrollHeight + 'px';
-  }, [currentValue]);
-
   // get replies (firebase fn) => change to MAP replies ONLY
   useEffect(() => {
     const x = postData?.comments?.map((post) => {
+      const decodedContent = htmlDecode(post.content);
       return (
         <Tweet
           key={post._id}
           id={post._id}
           uid={post.uid}
-          content={post.content}
+          content={decodedContent}
           // imgLink={''}
           date={post.date}
           likes={post.likes}
@@ -167,26 +155,7 @@ export default function PostPg(): JSX.Element {
           </div>
         </div>
         {/* ADD REPLY */}
-        <div className="px-[15px] flex items-center py-[14px] border-b-[1px] border-searchbar">
-          <div className="mr-[11px]">
-            <Avatar profile_pic={userProfile?.profile_pic || ''} />
-          </div>
-          <label className="grow py-[11px]">
-            <textarea
-              className="w-full resize-none focus:outline-none"
-              placeholder="Post your reply!"
-              ref={textareaRef}
-              value={currentValue}
-              onChange={(e) => setCurrentValue(e.target.value)}
-            />
-          </label>
-          <button
-            onClick={handleSubmitReply}
-            className="h-[34px] ml-[11px] px-[15px] rounded-full text-[14px] leading-[10px] font-bold text-white bg-blue"
-          >
-            Reply
-          </button>
-        </div>
+        <Reply />
         {/* REPLIES */}
         <div>{replies && replies}</div>
       </div>
