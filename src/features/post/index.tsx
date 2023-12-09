@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import Avatar from '../../components/user/avatar';
 import { useAuthContext } from '../../contexts/authContext';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
-import { dropdown, emoji, gif, globe, location, media, poll, schedule } from '../../styles/assets/icons/iconData';
+import { closeModalX, emoji, gif, location, media, poll, schedule } from '../../styles/assets/icons/iconData';
 import { handleAxiosValidationError } from '../../scripts/errorHandling';
 
 interface PostProps {
@@ -70,7 +70,7 @@ export default function Post({ setShouldUpdate }: PostProps): JSX.Element {
               <span>{dropdown}</span>
             </div>
           </div> */}
-          <div className="py-[11px]">
+          <label className="py-[11px]">
             <textarea
               ref={textareaRef}
               className="border-0 outline-none resize-none w-full"
@@ -80,10 +80,18 @@ export default function Post({ setShouldUpdate }: PostProps): JSX.Element {
                 setPostValue(e.target.value);
               }}
             />
-          </div>
+          </label>
           {previewImg && (
-            <div className="pb-[11px]">
-              <img className="rounded-2xl" src={previewImg} alt="" />
+            <div className="pb-[11px] max-w-[90%] relative">
+              <img className="rounded-2xl w-full" src={previewImg} alt="" />
+              <button
+                className="absolute top-[5px] right-[5px] flex justify-center items-center w-[32px] h-[32px] rounded-full bg-imgBg"
+                onClick={() => {
+                  setImgFile(() => undefined);
+                }}
+              >
+                <span className="w-[18px] inline-block invert">{closeModalX}</span>
+              </button>
             </div>
           )}
         </div>
