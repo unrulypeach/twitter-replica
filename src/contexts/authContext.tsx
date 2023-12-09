@@ -79,6 +79,7 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
     return await signInWithPopup(auth, provider);
   }
 
+  // persist login
   // check local storage for 'token' and try to log in
   useEffect(() => {
     const access_token = localStorage.getItem('token');
@@ -87,7 +88,6 @@ export const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
         .get('/validate')
         .then((res) => {
           const user = res.data;
-          console.log(user);
           setUserProfile(() => {
             return user;
           });
