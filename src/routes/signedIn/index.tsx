@@ -27,10 +27,10 @@ export default function SignedInHome(): JSX.Element {
           const decodedContent = htmlDecode(post.content);
           return (
             <Tweet
-              key={post._id}
+              key={post._id.toString()}
               _id={post._id}
               uid={post.uid}
-              content={decodedContent}
+              content={decodedContent ?? ''}
               // imgLink={post?.profile_pic ?? ''}
               // path={post?.path}
               date={post.date}
