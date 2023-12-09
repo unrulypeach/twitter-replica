@@ -46,7 +46,7 @@ export default function PostPg(): JSX.Element {
     if (!thisLiked) {
       axiosPrivate
         .post('/post/like', {
-          postid: postData._id,
+          postid,
         })
         .then(() => {
           setThisLiked(!thisLiked);
@@ -59,7 +59,7 @@ export default function PostPg(): JSX.Element {
     if (thisLiked) {
       axiosPrivate
         .delete('/post/like', {
-          data: { postid: postData._id },
+          data: { postid },
         })
         .then(() => {
           setThisLiked(!thisLiked);
@@ -155,7 +155,7 @@ export default function PostPg(): JSX.Element {
           </div>
         </div>
         {/* ADD REPLY */}
-        <Reply />
+        {postData && <Reply postid={postid} />}
         {/* REPLIES */}
         <div>{replies && replies}</div>
       </div>
