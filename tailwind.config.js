@@ -39,6 +39,7 @@ export default {
       imgHov: "rgba(39, 44, 48, 0.75)",
       tweetHov: "rgba(0, 0, 0, 0.03)",
       avatarHov: "rgba(26, 26, 26, 0.15)",
+      deleteColor: "rgb(244, 33, 46)",
     },
     extend: {
       boxShadow: {
