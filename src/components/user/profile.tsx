@@ -1,6 +1,6 @@
 import Avatar from './avatar';
 import { useAuthContext } from '../../contexts/authContext';
-import { showMonthAndYear } from '../../scripts/utils';
+import { showMonthAndYear, pathWoBackslash } from '../../scripts/utils';
 import React, { useEffect, useState } from 'react';
 import EditProfile from '../../features/editProfile';
 import axios from '../../api/axios';

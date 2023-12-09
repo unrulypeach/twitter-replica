@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { closeModalX, uploadPic } from '../../styles/assets/icons/iconData';
-import { type DocumentData } from 'firebase/firestore';
 import Avatar from '../../components/user/avatar';
 import { useAuthContext } from '../../contexts/authContext';
 import UserProps from '../../types/userProps';
@@ -10,7 +9,7 @@ interface IEditProfile {
   showModal: boolean;
   setShowModal: () => void;
   data: UserProps;
-  setUserInfo: React.Dispatch<React.SetStateAction<DocumentData | null>>;
+  setUserInfo: React.Dispatch<React.SetStateAction<UserProps | null>>;
 }
 export default function EditProfile({ showModal, setShowModal, data, setUserInfo }: IEditProfile): JSX.Element {
   const axiosPrivate = useAxiosPrivate();
