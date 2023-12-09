@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import type { TweetProps } from '../../types/tweetProps';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 import { handleAxiosError } from '../../scripts/errorHandling';
+import DeletePost from '../deletePost';
 
 export default function Tweet({
   uid,
@@ -22,6 +23,7 @@ export default function Tweet({
   const { userProfile } = useAuthContext();
   const [liked, setLiked] = useState(false);
   const [likesCount, setLikesCount] = useState(likes.length);
+  const [showDelete, setShowDelete] = useState(false);
   const { username, userhandle, profile_pic } = uid;
   const handleLike = (e: Event) => {
     e.preventDefault();
@@ -68,7 +70,7 @@ export default function Tweet({
           </div>
         </Link>
 
-        <div className="flex flex-col justify-center grow ">
+        <div className="flex flex-col justify-center grow relative">
           <div className="mb-[2px] flex flex-row justify-between leading-[19px]">
             <div>
               <Link to={`/${userhandle}`}>
@@ -77,8 +79,18 @@ export default function Tweet({
               </Link>
               <span className="text-[13px] leading-[19px] text-greyTxt"> {convertToTimeSince(date)}</span>
             </div>
-            <div>{moreNoBorder}</div>
+            <button
+              className="w-[34.75px] h-[34.75px] rounded-full hover:bg-blueHover"
+              onClick={(e) => {
+                e.preventDefault();
+                setShowDelete(() => true);
+              }}
+            >
+              <span className="fill-blueLineHover">{moreNoBorder}</span>
+            </button>
           </div>
+
+          {showDelete && <DeletePost setShowDelete={setShowDelete} />}
 
           <div className="text-[14px] leading-[19px]">
             <div>
