@@ -10,6 +10,7 @@ import axios from '../../api/axios';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import type UserProps from '../../types/userProps';
 import type { ShortUserProps, TweetProps } from '../../types/tweetProps';
+import { Types } from 'mongoose';
 
 interface ProfilePosts {
   user: ShortUserProps;
@@ -22,7 +23,11 @@ export default function ProfilePage(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(true);
   const [posts, setPosts] = useState<JSX.Element[]>([]);
-
+  function deleteTweetFromState(postid: Types.ObjectId) {
+    setPosts((prevPosts) => {
+      return prevPosts.filter((item) => item.props._id !== postid);
+    });
+  }
   // get user
   useEffect(() => {
     setLoading(true);
@@ -63,6 +68,7 @@ export default function ProfilePage(): JSX.Element {
                 date={post.date}
                 likes={post?.likes}
                 comments={post?.comments}
+                deleteTweet={deleteTweetFromState}
               />
             );
           });

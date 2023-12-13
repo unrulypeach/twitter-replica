@@ -19,7 +19,7 @@ export default {
         "700": "#EBEEF0",
         "800": "#F7F9F9",
       },
-      greyTxt: "#536471",
+      greyTxt: "rgb(83, 100, 113)", 
       white: "#FFFFFF",
       black: "#0F1419",
       blackHov: "#0f14191a",

@@ -18,6 +18,7 @@ export default function Tweet({
   date,
   likes,
   _id,
+  deleteTweet,
 }: TweetProps): JSX.Element {
   const axiosPrivate = useAxiosPrivate();
   const { userProfile } = useAuthContext();
@@ -27,9 +28,11 @@ export default function Tweet({
   const { username, userhandle, profile_pic } = uid;
   const handleLike = (e: Event) => {
     e.preventDefault();
+    // const controller = new AbortController();
     if (!liked) {
       axiosPrivate
         .post('/post/like', {
+          // signal: controller.signal,
           postid: _id,
         })
         .then(() => {
@@ -79,18 +82,26 @@ export default function Tweet({
               </Link>
               <span className="text-[13px] leading-[19px] text-greyTxt"> {convertToTimeSince(date)}</span>
             </div>
-            <button
-              className="w-[34.75px] h-[34.75px] rounded-full hover:bg-blueHover"
-              onClick={(e) => {
-                e.preventDefault();
-                setShowDelete(() => true);
-              }}
-            >
-              <span className="fill-blueLineHover">{moreNoBorder}</span>
-            </button>
+            <div className="inline-flex group">
+              <button
+                className="absolute right-[-7px] top-[-4px] rounded-full group-hover:bg-blueHover"
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowDelete(() => true);
+                }}
+              >
+                <div className="flex justify-center items-center w-[30px] h-[30px] fill-greyTxt group-hover:fill-blueLineHover">
+                  {moreNoBorder}
+                </div>
+              </button>
+            </div>
           </div>
 
-          {showDelete && <DeletePost setShowDelete={setShowDelete} />}
+          {uid._id === userProfile?._id ? (
+            showDelete && <DeletePost postid={_id} setShowDelete={setShowDelete} deleteTweet={deleteTweet} />
+          ) : (
+            <></>
+          )}
 
           <div className="text-[14px] leading-[19px]">
             <div>

@@ -10,12 +10,18 @@ import axios from '../../api/axios';
 import type { TweetProps } from '../../types/tweetProps';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import { htmlDecode } from '../../scripts/utils';
+import { Types } from 'mongoose';
 
 export default function SignedInHome(): JSX.Element {
   const [posts, setPosts] = useState<JSX.Element[]>([]);
   const [shouldUpdate, setShouldUpdate] = useState<boolean>(false);
-
   const { userProfile } = useAuthContext();
+  function deleteTweetFromState(postid: Types.ObjectId) {
+    setPosts((prevPosts) => {
+      return prevPosts.filter((item) => item.props._id !== postid);
+    });
+  }
+
   useEffect(() => {
     const postz = async (): Promise<void> => {
       if (!userProfile?.userhandle) {
@@ -36,6 +42,7 @@ export default function SignedInHome(): JSX.Element {
               date={post.date}
               likes={post?.likes}
               comments={post?.comments}
+              deleteTweet={deleteTweetFromState}
             />
           );
         });
@@ -49,7 +56,7 @@ export default function SignedInHome(): JSX.Element {
 
   return (
     <div className="flex flex-row">
-      <div className="border-r-[1px] border-r-searchbar">
+      <div className="max-w-[600px] border-r-[1px] border-r-searchbar">
         <div>
           <Header path="Home" />
         </div>

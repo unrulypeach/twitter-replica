@@ -13,6 +13,7 @@ export interface TweetProps {
   comments: Array<Types.ObjectId>;
   likes: Array<Types.ObjectId>;
   date: string;
+  deleteTweet?: (postid: Types.ObjectId) => void;
 }
 
 export interface TweetPopulatedCommentsProps {
