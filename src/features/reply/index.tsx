@@ -68,7 +68,7 @@ export default function Reply({ postid }: ReplyProps): JSX.Element {
             />
           </label>
           {previewImg && (
-            <div className="pb-[11px]">
+            <div className="pb-[11px] relative">
               <img className="rounded-2xl w-full" src={previewImg} alt="" />
               <button
                 className="cursor-pointer absolute top-[5px] right-[5px] flex justify-center items-center w-[32px] h-[32px] rounded-full bg-imgBg"

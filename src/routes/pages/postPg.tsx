@@ -10,6 +10,7 @@ import axios, { axiosPrivate } from '../../api/axios';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import { TweetPopulatedCommentsProps } from '../../types/tweetProps';
 import Reply from '../../features/reply';
+import { Types } from 'mongoose';
 
 export default function PostPg(): JSX.Element {
   const { userProfile } = useAuthContext();
@@ -19,7 +20,11 @@ export default function PostPg(): JSX.Element {
   const [thisLiked, setThisLiked] = useState(false);
   const [replies, setReplies] = useState([]);
   const [likesCount, setLikesCount] = useState(0);
-
+  function deleteReplyFromState(postid: Types.ObjectId) {
+    setReplies((prevReplies) => {
+      return prevReplies.filter((item) => item.props._id !== postid);
+    });
+  }
   // fetch tweet with comments populated
   useEffect(() => {
     axios
@@ -71,20 +76,21 @@ export default function PostPg(): JSX.Element {
     }
   };
 
-  // get replies (firebase fn) => change to MAP replies ONLY
+  // handles getting replies for the post
   useEffect(() => {
     const x = postData?.comments?.map((post) => {
-      const decodedContent = htmlDecode(post.content);
+      const decodedContent = htmlDecode(post.content) || 'ERROR DECODING';
       return (
         <Tweet
           key={post._id}
-          id={post._id}
+          _id={post._id}
           uid={post.uid}
           content={decodedContent}
           // imgLink={''}
           date={post.date}
           likes={post.likes}
           comments={post.comments}
+          deleteTweet={deleteReplyFromState}
         />
       );
     });
@@ -122,7 +128,7 @@ export default function PostPg(): JSX.Element {
           <div className="flex my-[5px] fill-dark-500 cursor-pointer group">
             <div className="rounded-full p-[8px] group-hover:bg-blueHover group-hover:fill-blueLineHover">{reply}</div>
             <span className="text-[12px] leading-[15px] px-[8px] pt-[8px] group-hover:text-blueLineHover">
-              {postData?.comments?.length}
+              {replies.length}
             </span>
           </div>
           <div className="my-[5px] fill-dark-500 cursor-pointer group">
