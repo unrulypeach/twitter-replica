@@ -128,7 +128,7 @@ export default function PostPg(): JSX.Element {
           <div className="flex my-[5px] fill-dark-500 cursor-pointer group">
             <div className="rounded-full p-[8px] group-hover:bg-blueHover group-hover:fill-blueLineHover">{reply}</div>
             <span className="text-[12px] leading-[15px] px-[8px] pt-[8px] group-hover:text-blueLineHover">
-              {replies.length}
+              {replies?.length}
             </span>
           </div>
           <div className="my-[5px] fill-dark-500 cursor-pointer group">
