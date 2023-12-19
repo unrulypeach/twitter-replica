@@ -1,5 +1,5 @@
 import Avatar from './avatar';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { showMonthAndYear, pathWoBackslash } from '../../scripts/utils';
 import React, { useEffect, useState } from 'react';
 import EditProfile from '../../features/editProfile';
@@ -27,13 +27,13 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
 
     useEffect(() => {
       axios
-        .get<number>(`/user/${_id}/followers_count`)
+        .get<number>(`/user/${_id.toString()}/followers_count`)
         .then((res) => {
           setFollowers(() => res.data);
         })
         .catch((error) => handleAxiosError(error));
       axios
-        .get<number>(`/user/${_id}/following_count`)
+        .get<number>(`/user/${_id.toString()}/following_count`)
         .then((res) => {
           setFollowing(() => res.data);
         })
@@ -47,7 +47,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
         ) : (
           <div className="h-[200px] bg-dark-650" />
         )}
-        <div className="flex flex-col px-[15px] pt-[11px]">
+        <div className="flex flex-col px-[15px] pt-[11px] mb-[16px]">
           <div className="flex justify-between basis-auto items-start">
             <div className="relative mt-[-15%] mb-[11px] border-white border-4 rounded-full">
               <Avatar profile_pic={profile_pic} size={134} />
