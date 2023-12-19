@@ -10,7 +10,7 @@ import NotificationsPage from './routes/pages/notificationsPg';
 import ProfilePage from './routes/pages/profilePg';
 
 import { AuthProvider } from './contexts/authContext';
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import PostPg from './routes/pages/postPg';
 import ErrorPage from './routes/pages/error';
 
@@ -19,9 +19,25 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
+      /* ...['/', 'home'].map((path) => ({
+        path,
+        element: <HomePg />,
+        children: [
+          { path: 'signup', element: <SignupPopup /> },
+          { path: 'login', element: <LoginPopup /> },
+        ],
+      })), */
+      {
+        path: 'home',
+        element: <HomePg />,
+        children: [
+          { path: 'signup', element: <SignupPopup /> },
+          { path: 'login', element: <LoginPopup /> },
+        ],
+      },
       {
         path: '/',
-        element: <HomePg />,
+        element: <Navigate to="/home" replace />,
         children: [
           { path: 'signup', element: <SignupPopup /> },
           { path: 'login', element: <LoginPopup /> },

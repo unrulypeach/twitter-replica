@@ -26,7 +26,7 @@ export default function SignedInLSideMenu(): JSX.Element {
     // <div className="border-r-[1px] border-searchbar fixed med:left-0 h-full w-[275px] med:w-[88px] px-[8x] flex flex-col justify-between med:items-center">
     <div className="border-r-[1px] border-searchbar med:left-0 h-full w-[275px] med:w-[88px] px-[8x] flex flex-col justify-between med:items-center">
       <div>
-        <Link to="/">
+        <Link to="home">
           <div className="flex items-center px-[11px] py-[2px] h-[47px]">{twitterBirdBlue}</div>
         </Link>
         <div className="flex flex-col">

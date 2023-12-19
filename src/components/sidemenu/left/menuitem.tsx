@@ -14,7 +14,7 @@ export default function MenuItem({ title, iconData, filledIcon }: IconProps): JS
 
   function Selected(): JSX.Element {
     return (
-      <Link to={lcTitle === 'home' ? '/' : lcTitle} className="flex cursor-pointer py-[4px]">
+      <Link to={lcTitle === 'home' ? 'home' : lcTitle} className="flex cursor-pointer py-[4px]">
         <div className="flex flex-row justify-center p-[11px] hover:bg-blackHov rounded-full">
           <div className="h-[24.5px] w-[24.5px]">{filledIcon}</div>
           <div className="text-[18px] leading-[23px] ml-[19px] mr-[15px] med:hidden">
@@ -27,7 +27,7 @@ export default function MenuItem({ title, iconData, filledIcon }: IconProps): JS
 
   function Unselected(): JSX.Element {
     return (
-      <Link to={lcTitle === 'home' ? '/' : lcTitle} className="flex cursor-pointer py-[4px]">
+      <Link to={lcTitle === 'home' ? 'home' : lcTitle} className="flex cursor-pointer py-[4px]">
         <div className="flex flex-row justify-center p-[11px] hover:bg-blackHov rounded-full">
           <div className="h-[24.5px] w-[24.5px]">{iconData}</div>
           <div className="text-[18px] leading-[23px] ml-[19px] mr-[15px] med:hidden">
