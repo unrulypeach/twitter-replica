@@ -9,7 +9,7 @@ import MessagesPage from './routes/pages/messagesPg';
 import NotificationsPage from './routes/pages/notificationsPg';
 import ProfilePage from './routes/pages/profilePg';
 
-import { AuthProvider } from './contexts/authContext';
+import AuthProvider from './contexts/authContextProvider';
 import { createBrowserRouter, RouterProvider, Outlet, Navigate } from 'react-router-dom';
 import PostPg from './routes/pages/postPg';
 import ErrorPage from './routes/pages/error';

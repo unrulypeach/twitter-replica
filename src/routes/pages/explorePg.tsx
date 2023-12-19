@@ -3,7 +3,7 @@ import Searchbar from '../../features/searchbar';
 import Tabbar from '../../features/tabbar';
 import SignedOutRSideMenu from '../../components/sidemenu/right/signedOutRSideMenu';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 
 export default function ExplorePage(): JSX.Element {
   const { userProfile } = useAuthContext();

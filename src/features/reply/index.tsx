@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 import Avatar from '../../components/user/avatar';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { emoji, gif, media, location, closeModalX } from '../../styles/assets/icons/iconData';
 import { handleAxiosValidationError } from '../../scripts/errorHandling';
 

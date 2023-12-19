@@ -1,7 +1,7 @@
 import type IconProps from '../../../types/iconProps';
 import { Link } from 'react-router-dom';
 import { pathWoBackslash } from '../../../scripts/utils';
-import { useAuthContext } from '../../../contexts/authContext';
+import useAuthContext from '../../../hooks/useAuthContext';
 
 export default function MenuItem({ title, iconData, filledIcon }: IconProps): JSX.Element {
   let lcTitle = title.toLowerCase();

@@ -1,6 +1,6 @@
 import Avatar from './avatar';
 import { moreNoBorder } from '../../styles/assets/icons/iconData';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { handleAxiosError } from '../../scripts/errorHandling';

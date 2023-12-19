@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import Avatar from '../../components/user/avatar';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 import { closeModalX, emoji, gif, location, media, poll, schedule } from '../../styles/assets/icons/iconData';
 import { handleAxiosValidationError } from '../../scripts/errorHandling';

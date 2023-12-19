@@ -2,7 +2,7 @@ import { useContext, useState } from 'react';
 import { SIGNUP_PAGE_CONTEXT, NEW_USER_CONTEXT } from '../../contexts/userContext';
 import CloseModal from '../signupModal/closeModal';
 import { hidePassword, viewPassword } from '../../styles/assets/icons/iconData';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { axiosPrivate } from '../../api/axios';
 import { jwtDecode } from 'jwt-decode';
 

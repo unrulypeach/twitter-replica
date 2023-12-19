@@ -4,7 +4,7 @@ import CloseModal from '../signupModal/closeModal';
 import { Link } from 'react-router-dom';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
 import { handleAxiosError, handleAxiosValidationError } from '../../scripts/errorHandling';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 
 export default function CreateUsername(): JSX.Element {
   const axiosPrivate = useAxiosPrivate();

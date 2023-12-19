@@ -1,7 +1,7 @@
 import Avatar from '../../components/user/avatar';
 import { convertToTimeSince } from '../../scripts/utils';
 import { reply, retweet, like, views, share, moreNoBorder, likeFilled } from '../../styles/assets/icons/iconData';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { TweetProps } from '../../types/tweetProps';

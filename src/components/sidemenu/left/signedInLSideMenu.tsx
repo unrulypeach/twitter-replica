@@ -17,7 +17,7 @@ import {
 } from '../../../styles/assets/icons/iconData';
 import ProfileMini from '../../user/profileMini';
 import { Link } from 'react-router-dom';
-import { useAuthContext } from '../../../contexts/authContext';
+import useAuthContext from '../../../hooks/useAuthContext';
 import Avatar from '../../user/avatar';
 
 export default function SignedInLSideMenu(): JSX.Element {

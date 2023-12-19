@@ -2,7 +2,7 @@ import Header from '../../features/header';
 import Post from '../../features/post';
 import Tabbar from '../../features/tabbar';
 import NoHome from '../../components/noContent/noHome';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import Tweet from '../../features/tweet';
 import { useState, useEffect } from 'react';
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';

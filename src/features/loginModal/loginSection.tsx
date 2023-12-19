@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 
 export default function LoginSection(): JSX.Element {
   const [loginEmail, setLoginEmail] = useState('');

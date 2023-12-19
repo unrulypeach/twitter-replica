@@ -8,7 +8,7 @@ import { SIGNUP_PAGE_CONTEXT, NEW_USER_CONTEXT, LOGIN_PAGE_CONTEXT } from '../co
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { newUserDefault } from '../defaults/newUserDefault';
-import { useAuthContext } from '../contexts/authContext';
+import useAuthContext from '../hooks/useAuthContext';
 
 export default function HomePg(): JSX.Element {
   const [signupPage, setSignupPage] = useState(0);

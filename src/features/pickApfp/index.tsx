@@ -1,7 +1,7 @@
 import { useContext, useState } from 'react';
 import CloseModal from '../signupModal/closeModal';
 import { SIGNUP_PAGE_CONTEXT } from '../../contexts/userContext';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 
 export default function PickApfp(): JSX.Element {
   const { signupPage, setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);

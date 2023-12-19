@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { handleAxiosError } from '../../scripts/errorHandling';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 
 export default function FollowBtn({ uid }): JSX.Element {
   const { userProfile } = useAuthContext();

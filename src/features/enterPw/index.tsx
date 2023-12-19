@@ -1,7 +1,7 @@
 import CloseModal from '../signupModal/closeModal';
 import { hidePassword, viewPassword } from '../../styles/assets/icons/iconData';
 import { useContext, useState } from 'react';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import { LOGIN_PAGE_CONTEXT } from '../../contexts/userContext';
 import { Link } from 'react-router-dom';
 import { axiosPrivate } from '../../api/axios';

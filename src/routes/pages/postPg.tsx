@@ -1,5 +1,5 @@
 import SignedInRSideMenu from '../../components/sidemenu/right/signedInRSideMenu';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import Avatar from '../../components/user/avatar';
 import { useLocation } from 'react-router-dom';
 import { htmlDecode, lastParam, showMonthDayAndYear, showTime } from '../../scripts/utils';
