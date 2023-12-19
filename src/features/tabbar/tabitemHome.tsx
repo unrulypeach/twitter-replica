@@ -1,4 +1,4 @@
-import TabItem from "./tabItem";
+import TabItem from './tabItem';
 
 export default function TabitemHome(): JSX.Element {
   return (
