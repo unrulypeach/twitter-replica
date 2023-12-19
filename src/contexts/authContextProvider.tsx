@@ -1,7 +1,6 @@
 import { useMemo, useState, useEffect } from 'react';
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
-import { auth, storage } from '../configs/firebase-config';
+import { storage } from '../configs/firebase-config';
 import { jwtDecode } from 'jwt-decode';
 import useRefreshToken from '../hooks/useRefreshToken';
 import useAxiosPrivate from '../hooks/useAxiosInterceptors';
@@ -44,11 +43,6 @@ const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
     } catch (error) {
       console.error('error uploading to cloud storage:', error);
     }
-  }
-
-  async function loginWithGooglePopup() {
-    const provider = new GoogleAuthProvider();
-    return await signInWithPopup(auth, provider);
   }
 
   // persist login
@@ -98,7 +92,6 @@ const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       setLoginData,
       uploadUserPhoto,
       uploadBgPhoto,
-      loginWithGooglePopup,
     };
   }, [userProfile, loginData]);
 
