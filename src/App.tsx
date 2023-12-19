@@ -19,14 +19,6 @@ const router = createBrowserRouter([
     element: <Layout />,
     errorElement: <ErrorPage />,
     children: [
-      /* ...['/', 'home'].map((path) => ({
-        path,
-        element: <HomePg />,
-        children: [
-          { path: 'signup', element: <SignupPopup /> },
-          { path: 'login', element: <LoginPopup /> },
-        ],
-      })), */
       {
         path: 'home',
         element: <HomePg />,
