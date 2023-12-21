@@ -1,9 +1,12 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useEffect, useState } from 'react';
 import { closeModalX, uploadPic } from '../../styles/assets/icons/iconData';
 import Avatar from '../../components/user/avatar';
-import { useAuthContext } from '../../contexts/authContext';
+import useAuthContext from '../../hooks/useAuthContext';
 import UserProps from '../../types/userProps';
 import useAxiosPrivate from '../../hooks/useAxiosInterceptors';
+import { handleAxiosError } from '../../scripts/errorHandling';
+import FirebaseService from '../../services/FirebaseService';
 
 interface IEditProfile {
   showModal: boolean;
@@ -13,14 +16,15 @@ interface IEditProfile {
 }
 export default function EditProfile({ showModal, setShowModal, data, setUserInfo }: IEditProfile): JSX.Element {
   const axiosPrivate = useAxiosPrivate();
-  const { uploadUserPhoto, uploadBgPhoto, userProfile, setUserProfile } = useAuthContext();
-  const { bio, location, website, username, profile_pic /* userhandle */ } = data;
-  const [name, setName] = useState(username ?? '');
+  const { uploadUserPhoto, uploadBgPhoto } = FirebaseService();
+  const { setUserProfile } = useAuthContext();
+  const { bio, location, website, username, profile_pic, header_pic, _id } = data;
+  const [nameState, setNameState] = useState(username ?? '');
   const [bioState, setBioState] = useState(bio ?? '');
   const [locationState, setLocationState] = useState(location ?? '');
   const [websiteState, setWebsiteState] = useState(website ?? '');
   const [profPicState, setProfPicState] = useState<string | undefined>();
-  const [bgPicState, setBgPicState] = useState();
+  const [bgPicState, setBgPicState] = useState<string | undefined>();
   const [imgFile, setImgFile] = useState<File | undefined>(undefined);
   const [bgImgFile, setBgImgFile] = useState<File | undefined>(undefined);
 
@@ -31,23 +35,24 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
     if (bgImgFile) bgPhoto = await uploadBgPhoto(bgImgFile);
 
     const newEdit = {
-      ...(bioState && { bio: bioState }),
-      ...(name && { username: name }),
-      ...(locationState && { location: locationState }),
-      ...(websiteState && { website: websiteState }),
-      ...(userPic && { profile_pic: userPic }),
-      ...(bgPhoto && { header_pic: bgPhoto }),
+      ...(bioState !== bio && { bio: bioState }),
+      ...(nameState !== username && { username: nameState }),
+      ...(locationState !== location && { location: locationState }),
+      ...(websiteState !== website && { website: websiteState }),
+      ...(userPic !== profile_pic && { profile_pic: userPic }),
+      ...(bgPhoto !== header_pic && { header_pic: bgPhoto }),
     };
 
-    axiosPrivate.put(`/user/${_id}`, newEdit);
-    // move this to after submitting
-    setUserProfile((prev) => {
-      return { ...prev, profile_pic: userPic };
-    });
+    axiosPrivate
+      .put<UserProps>(`/user/${_id.toString()}`, newEdit)
+      .then((res) => {
+        setUserProfile(() => res.data);
+      })
+      .catch((error) => handleAxiosError(error));
   };
 
   const handleClosePg = () => {
-    setName(username ?? '');
+    setNameState(username ?? '');
     setBioState(bio ?? '');
     setLocationState(location ?? '');
     setWebsiteState(website ?? '');
@@ -55,6 +60,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
     setBgImgFile(undefined);
   };
 
+  // preview profile_pic
   useEffect(() => {
     if (!imgFile) {
       setProfPicState(profile_pic ?? '');
@@ -63,8 +69,9 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
     const objectUrl = URL.createObjectURL(imgFile);
     setProfPicState(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [imgFile]);
+  }, [imgFile, profile_pic]);
 
+  // preview bg_pic
   useEffect(() => {
     if (!bgImgFile) {
       setBgPicState(data?.header_pic ?? '');
@@ -73,7 +80,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
     const objectUrl = URL.createObjectURL(bgImgFile);
     setBgPicState(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
-  }, [bgImgFile]);
+  }, [bgImgFile, data?.header_pic]);
 
   return (
     <>
@@ -198,7 +205,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
                         required
                         value={name}
                         onChange={(e) => {
-                          setName(e.target.value);
+                          setNameState(e.target.value);
                         }}
                       />
                     </div>

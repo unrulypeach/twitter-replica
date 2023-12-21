@@ -1,12 +1,13 @@
 import { useContext, useState } from 'react';
 import CloseModal from '../signupModal/closeModal';
 import { SIGNUP_PAGE_CONTEXT } from '../../contexts/userContext';
-import useAuthContext from '../../hooks/useAuthContext';
+import FirebaseService from '../../services/FirebaseService';
 
 export default function PickApfp(): JSX.Element {
+  const { uploadUserPhoto } = FirebaseService();
   const { signupPage, setSignupPage } = useContext(SIGNUP_PAGE_CONTEXT);
   const [file, setFile] = useState<File>();
-  const { uploadUserPhoto } = useAuthContext();
+
   function handleNext(): void {
     if (uploadUserPhoto && file) void uploadUserPhoto(file);
     if (setSignupPage) setSignupPage(Number(signupPage) + 1);
