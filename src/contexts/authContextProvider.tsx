@@ -1,6 +1,4 @@
 import { useMemo, useState, useEffect } from 'react';
-import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage';
-import { storage } from '../configs/firebase-config';
 import { jwtDecode } from 'jwt-decode';
 import useRefreshToken from '../hooks/useRefreshToken';
 import useAxiosPrivate from '../hooks/useAxiosInterceptors';
@@ -15,35 +13,6 @@ const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
   const [loginData, setLoginData] = useState<string>('');
   const axiosPrivate = useAxiosPrivate();
   const refresh = useRefreshToken();
-
-  // uploads photo to cloud storage
-  async function uploadUserPhoto(file: File): Promise<string | undefined> {
-    try {
-      const userUid = userProfile?._id.toString();
-      const filePath = `${userUid}/${file.name}`;
-      const newImageRef = ref(storage, filePath);
-      await uploadBytesResumable(newImageRef, file);
-
-      const publicImageUrl = await getDownloadURL(newImageRef);
-      return publicImageUrl;
-    } catch (error) {
-      console.error('error uploading to cloud storage', error);
-    }
-  }
-
-  async function uploadBgPhoto(file: File): Promise<string | undefined> {
-    try {
-      const userUid = userProfile?._id.toString();
-      const filePath = `${userUid}/${file.name}`;
-      const newImageRef = ref(storage, filePath);
-      await uploadBytesResumable(newImageRef, file);
-
-      const publicImageUrl = await getDownloadURL(newImageRef);
-      return publicImageUrl;
-    } catch (error) {
-      console.error('error uploading to cloud storage:', error);
-    }
-  }
 
   // persist login
   // check local storage for 'token' and try to log in
@@ -90,8 +59,6 @@ const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       setUserProfile,
       loginData,
       setLoginData,
-      uploadUserPhoto,
-      uploadBgPhoto,
     };
   }, [userProfile, loginData]);
 
