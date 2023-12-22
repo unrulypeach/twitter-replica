@@ -9,10 +9,10 @@ import FollowBtn from '../../features/followBtn';
 import { handleAxiosError } from '../../scripts/errorHandling';
 interface IProfile {
   data: UserProps;
-  setData: React.Dispatch<React.SetStateAction<UserProps | null>>;
+  setUserData: React.Dispatch<React.SetStateAction<UserProps | null>>;
 }
 
-const Profile = ({ data, setData }: IProfile): JSX.Element => {
+const Profile = ({ data, setUserData }: IProfile): JSX.Element => {
   const { userProfile } = useAuthContext();
 
   const AssignedProfile = (): JSX.Element => {
@@ -132,7 +132,7 @@ const Profile = ({ data, setData }: IProfile): JSX.Element => {
             </div>
           </div>
         </div>
-        <EditProfile setUserInfo={setData} showModal={showEdit} setShowModal={handleEditProfile} data={data} />
+        <EditProfile setUserData={setUserData} showModal={showEdit} setShowModal={handleEditProfile} data={data} />
       </>
     );
   };

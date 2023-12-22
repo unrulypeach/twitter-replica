@@ -95,7 +95,9 @@ export default function ProfilePage(): JSX.Element {
               <div className="loader" />
             </div>
           ) : (
-            <>{!userData ? <p>THIS ACCOUNT DOES NOT EXIST</p> : <Profile data={userData} setData={setUserData} />}</>
+            <>
+              {!userData ? <p>THIS ACCOUNT DOES NOT EXIST</p> : <Profile data={userData} setUserData={setUserData} />}
+            </>
           )}
 
           {userData && (

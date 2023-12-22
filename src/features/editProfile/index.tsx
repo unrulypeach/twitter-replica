@@ -12,9 +12,9 @@ interface IEditProfile {
   showModal: boolean;
   setShowModal: () => void;
   data: UserProps;
-  setUserInfo: React.Dispatch<React.SetStateAction<UserProps | null>>;
+  setUserData: React.Dispatch<React.SetStateAction<UserProps | null>>;
 }
-export default function EditProfile({ showModal, setShowModal, data, setUserInfo }: IEditProfile): JSX.Element {
+export default function EditProfile({ showModal, setShowModal, data, setUserData }: IEditProfile): JSX.Element {
   const axiosPrivate = useAxiosPrivate();
   const { uploadUserPhoto, uploadBgPhoto } = FirebaseService();
   const { setUserProfile } = useAuthContext();
@@ -47,6 +47,7 @@ export default function EditProfile({ showModal, setShowModal, data, setUserInfo
       .put<UserProps>(`/user/${_id.toString()}`, newEdit)
       .then((res) => {
         setUserProfile(() => res.data);
+        setUserData(() => res.data);
       })
       .catch((error) => handleAxiosError(error));
   };
