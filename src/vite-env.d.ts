@@ -7,6 +7,7 @@ interface ImportMetaEnv {
   readonly VITE_APP_STORAGEBUCKET: string;
   readonly VITE_APP_MESSAGINGSENDERID: string;
   readonly VITE_APP_APPID: string;
+  readonly VITE_APP_API_URL: string;
 }
 
 interface ImportMeta {
