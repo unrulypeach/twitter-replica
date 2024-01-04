@@ -25,6 +25,7 @@ const useAxiosPrivate = () => {
       (response) => response,
       async (error: AxiosError) => {
         const prevRequest = error?.config;
+        console.log(prevRequest);
         // 403 auth error and already tried
         if ((error?.response?.status === 403 || error?.response?.status === 401) && !prevRequest?.sent) {
           prevRequest.sent = true;
