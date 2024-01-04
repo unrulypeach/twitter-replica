@@ -39,7 +39,6 @@ export default function CreateUsername(): JSX.Element {
           setUserhandleIsValid(() => username + ' is available');
           setUserhandleSubmit(true);
         }
-        console.log(username, 'is', res.data);
       } catch (error) {
         const errorArray = handleAxiosValidationError(error);
         setUserhandleIsValid(() => '');
