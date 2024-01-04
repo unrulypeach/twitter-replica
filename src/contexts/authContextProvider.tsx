@@ -22,6 +22,7 @@ const AuthProvider = ({ children }: ChildrenProps): JSX.Element => {
       axiosPrivate
         .get<UserProps>('/validate')
         .then((res) => {
+          console.log('validated');
           const user = res.data;
           setUserProfile(() => {
             return user;
