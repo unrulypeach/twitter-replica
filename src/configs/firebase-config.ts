@@ -1,8 +1,8 @@
 // /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { initializeApp } from 'firebase/app';
-import { connectAuthEmulator, getAuth } from 'firebase/auth';
-import { connectFirestoreEmulator, getFirestore } from 'firebase/firestore';
-import { connectStorageEmulator, getStorage } from 'firebase/storage';
+// import { getAuth } from 'firebase/auth';
+// import { getFirestore } from 'firebase/firestore';
+import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_APP_APIKEY,
@@ -15,8 +15,8 @@ const firebaseConfig = {
 
 // auth
 const app = initializeApp(firebaseConfig);
-export default app;
-export const auth = getAuth(app);
+// export default app;
+// export const auth = getAuth(app);
 /* export const auth = getAuth();
 connectAuthEmulator(auth, 'http://localhost:9099'); */
 
@@ -29,7 +29,7 @@ export const storage = getStorage(app);
 } */
 
 // firestore
-export const db = getFirestore(app);
+// export const db = getFirestore(app);
 /* export const db = getFirestore();
 if (location.hostname === 'localhost') {
   connectFirestoreEmulator(db, 'localhost', 8080);
