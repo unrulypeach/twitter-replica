@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
-import { axiosPrivate } from '../api/axios';
 import RefreshProps from '../types/refreshProps';
 import { handleAxiosError } from '../scripts/errorHandling';
+import { axiosPrivate } from '../api/axios';
 
 const useRefreshToken = () => {
   let res: AxiosResponse<RefreshProps>;
